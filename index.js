@@ -8,6 +8,9 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { config } from 'dotenv';
 config();
 
+import { igdb } from './igdb.js';
+export const igdbHelper = new igdb();
+
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -48,24 +51,5 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-
-fetch(
-	`https://id.twitch.tv/oauth2/token?client_id=${process.env.igdbClientId}&client_secret=${process.env.igdbClientSecret}&grant_type=client_credentials`,
-	{
-		method: 'POST',
-	},
-)
-.then(r => r.json().then(data => ({ status: r.status, headers: r.headers, body: data })))
-.then(resp => {
-	if (resp.status != 200) {
-		console.log('Failed with ', resp.status, resp.body);
-		return;
-	}
-	console.log(resp.body.access_token);
-})
-.catch(err => {
-	console.error(err);
-})
-.finally();
 
 client.login(process.env.token);
