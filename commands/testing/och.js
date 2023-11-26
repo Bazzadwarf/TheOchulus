@@ -1,9 +1,10 @@
-import { SlashCommandBuilder } from 'discord.js';
+const { SlashCommandBuilder } = require('discord.js');
 
-export const data = new SlashCommandBuilder()
+module.exports = {
+	data: new SlashCommandBuilder()
 	.setName('och')
-	.setDescription('och');	
-
-export async function execute(interaction) {
-	await interaction.reply('och');	
-}
+	.setDescription('och'),
+	async execute(interaction) {
+		await interaction.reply('och');
+	},
+};

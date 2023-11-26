@@ -1,9 +1,11 @@
-import { SlashCommandBuilder } from 'discord.js';
+const { SlashCommandBuilder } = require('discord.js');
 
-export const data = new SlashCommandBuilder()
-	.setName('ping')
-	.setDescription('Replies with pong!');	
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('ping')
+		.setDescription('Replies with pong!'),
 
-export async function execute(interaction) {
-	await interaction.reply('Pong!');	
-}
+	async execute(interaction) {
+		await interaction.reply('Pong!');
+	},
+};

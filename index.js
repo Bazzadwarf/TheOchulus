@@ -1,15 +1,15 @@
 // Require the necessary discord.js classes
-import fs from 'node:fs';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { fileURLToPath } from 'url';
-import { Client, Collection, GatewayIntentBits } from 'discord.js';
+const fs = require('node:fs');
+const path = require('node:path');
+const { pathToFileURL } = require('node:url');
+const { fileURLToPath } = require('url');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
-import { config } from 'dotenv';
+const { config } = require('dotenv');
 config();
 
-import { igdb } from './igdb.js';
-export const igdbHelper = new igdb();
+const { igdb } = require('./igdb.js');
+const igdbHelper = new igdb();
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -17,8 +17,6 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 client.cooldowns = new Collection();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
@@ -28,7 +26,7 @@ for (const folder of commandFolders) {
 
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = await import(pathToFileURL(filePath));
+		const command = require(filePath);
 
 		// Set a new item in the collection with the key as the command name and the value as the exported module
 		if ('data' in command && 'execute' in command) {
@@ -44,7 +42,7 @@ const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'
 
 for (const file of eventFiles) {
 	const filePath = path.join(eventsPath, file);
-	const event = await import(pathToFileURL(filePath));
+	const event = require(filePath);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	} else {
@@ -53,3 +51,31 @@ for (const file of eventFiles) {
 }
 
 client.login(process.env.token);
+
+const { Sequelize } = require('sequelize');
+
+const sequelize = new Sequelize('database', 'user', 'password', {
+	host: 'localhost',
+	dialect: 'sqlite',
+	logging: false,
+	storage: 'database.sqlite',
+});
+
+const Tags = sequelize.define('tags', {
+	name: {
+		type: Sequelize.STRING,
+		unique: true,
+	},
+	description: Sequelize.TEXT,
+	username: Sequelize.STRING,
+	usage_count: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0,
+		allowNull: false,
+	},
+});
+
+client.once(Events.ClientReady, () => {
+	Tags.sync({ force: true });
+	console.log(`Logged in as ${client.user.tag}!`);
+})

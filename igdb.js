@@ -1,4 +1,4 @@
-export class igdb {
+class igdb {
     constructor() {
         // make a new token every day
         setInterval(() => {
@@ -30,3 +30,7 @@ export class igdb {
     .finally();
     }
 }
+
+module.exports = {
+    igdb
+};
