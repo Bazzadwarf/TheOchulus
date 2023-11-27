@@ -1,15 +1,13 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs');
 const path = require('node:path');
-const { pathToFileURL } = require('node:url');
-const { fileURLToPath } = require('url');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
 const { config } = require('dotenv');
 config();
 
 const { igdb } = require('./igdb.js');
-const igdbHelper = new igdb();
+new igdb();
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -78,4 +76,4 @@ const Tags = sequelize.define('tags', {
 client.once(Events.ClientReady, () => {
 	Tags.sync({ force: true });
 	console.log(`Logged in as ${client.user.tag}!`);
-})
+});
