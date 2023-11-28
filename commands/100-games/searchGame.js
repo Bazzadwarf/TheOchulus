@@ -46,6 +46,15 @@ async function searchGamesWithMinimumReview(gamename) {
     return games;
 }
 
+async function searchGamesWithoutMinimumReview(gamename) {
+    let body = `search "${gamename}"; `;
+    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4) & version_parent = null;');
+
+    const games = await getGameJson(body);
+
+    return games;
+}
+
 async function getGameJson(body) {
     let res;
 
