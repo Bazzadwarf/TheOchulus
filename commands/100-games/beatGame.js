@@ -13,25 +13,25 @@ module.exports = {
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
         const platform = interaction.options.getString('platform');
-    
+
         if (!gamename && !gameid) return interaction.reply('No gamename or gameid supplied, please supply an option to register a game!');
-    
-        let body = "";
-    
+
+        let body = '';
+
         if (gameid) {
-            body = body.concat('where id = ', gameid,'; ');
+            body = body.concat('where id = ', gameid, '; ');
         } else if (gamename) {
-            body = body.concat('search "', gamename,'"; ');
+            body = body.concat('search "', gamename, '"; ');
         }
-    
+
         body = body.concat('fields *;');
-    
-        let res = await getGameJson(body);
-    
-        if (!res[0]) return interaction.reply("No game found for the options supplied.");
-    
+
+        const res = await getGameJson(body);
+
+        if (!res[0]) return interaction.reply('No game found for the options supplied.');
+
         const coverUrl = await getCoverURL(res[0].cover);
-    
+
         const embed = new EmbedBuilder()
             .setColor(0xFFD700)
             .setAuthor({ name: `${interaction.user.displayName} beat a new game!`, iconURL: interaction.user.avatarURL() })
@@ -40,23 +40,23 @@ module.exports = {
             .setDescription(`${interaction.user.displayName} has beaten 69 games, they have 31 games remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
-    
+
         return interaction.reply({ embeds: [embed] });
     },
 };
 
 async function getGameJson(body) {
     let res;
-    
+
     await fetch(
-        "https://api.igdb.com/v4/games",
+        'https://api.igdb.com/v4/games',
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Client-ID': `${process.env.igdbClientId}`,
             'Authorization': `Bearer ${process.env.igdbAccessToken}`,
           },
-          body: body
+          body: body,
       })
         .then(response => response.json())
         .then(response => {
@@ -70,16 +70,16 @@ async function getGameJson(body) {
 }
 
 async function getPlatformID(platform) {
-   
+
     await fetch(
-        "https://api.igdb.com/v4/platforms",
+        'https://api.igdb.com/v4/platforms',
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Client-ID': `${process.env.igdbClientId}`,
             'Authorization': `Bearer ${process.env.igdbAccessToken}`,
           },
-          body: `where name = "${platform}", alternative_name = "${platform}"; fields id;`
+          body: `where name = "${platform}", alternative_name = "${platform}"; fields id;`,
       })
       .then(response => response.json())
       .then(response => {
@@ -91,17 +91,17 @@ async function getPlatformID(platform) {
 }
 
 async function getCoverURL(id) {
-    let url = "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png";
+    let url = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
 
     await fetch(
-        "https://api.igdb.com/v4/covers",
+        'https://api.igdb.com/v4/covers',
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Client-ID': `${process.env.igdbClientId}`,
             'Authorization': `Bearer ${process.env.igdbAccessToken}`,
           },
-          body: `where id = ${id}; fields url;`
+          body: `where id = ${id}; fields url;`,
         })
         .then(response => response.json())
         .then(response => {
