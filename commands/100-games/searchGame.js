@@ -37,6 +37,15 @@ module.exports = {
 	},
 };
 
+async function searchGamesWithMinimumReview(gamename) {
+    let body = `search "${gamename}"; `;
+    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4) & version_parent = null & total_rating_count > 0;');
+
+    const games = await getGameJson(body);
+
+    return games;
+}
+
 async function getGameJson(body) {
     let res;
 
