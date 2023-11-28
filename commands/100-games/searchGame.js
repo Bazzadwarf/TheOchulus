@@ -20,10 +20,8 @@ module.exports = {
         let description = '';
 
         for (const game of games) {
-            const release_dates = game['release_dates'];
-            if (release_dates && (game.category == 0 || game.category == 4)) {
-                const release_date = await getReleaseDates(release_dates[0]);
-
+            if (game.first_release_date && (game.category == 0 || game.category == 4)) {
+                const release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(game.first_release_date * 1000);
                 description = description.concat(`- **${game.name}** (*${release_date}*) - ID: ${game.id} \n`);
             }
         }
