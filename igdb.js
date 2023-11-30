@@ -4,11 +4,11 @@ class igdb {
         setInterval(() => {
             this.makeClientCred();
         }, 86000000);
-        this.makeClientCred()
+        this.makeClientCred();
     }
 
    makeClientCred() {
-    console.log("Making a token");
+    console.log('Making a token');
 
     fetch(
         `https://id.twitch.tv/oauth2/token?client_id=${process.env.igdbClientId}&client_secret=${process.env.igdbClientSecret}&grant_type=client_credentials`,
@@ -32,5 +32,5 @@ class igdb {
 }
 
 module.exports = {
-    igdb
+    igdb,
 };
