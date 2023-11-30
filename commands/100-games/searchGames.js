@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('searchgame')
+		.setName('searchgames')
 		.setDescription('Searches the igdb database for matching games.')
         .addStringOption(option => option.setName('gamename').setDescription('The name of the game').setRequired(true)),
 
