@@ -96,9 +96,106 @@ async function getReleaseDates(id) {
     return date;
 }
 
+async function getCompanyInfo(id) {
+
+    let involved_company;
+
+    await fetch(
+        'https://api.igdb.com/v4/involved_companies',
+        { method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+          },
+          body: `where id = ${id}; fields *;`,
+        })
+        .then(response => response.json())
+        .then(response => {
+            involved_company = response[0];
+        })
+        .catch(err => {
+            return console.error(err);
+        });
+
+    let developer;
+
+    await fetch(
+        'https://api.igdb.com/v4/companies',
+        { method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+          },
+          body: `where id = ${involved_company.company}; fields *;`,
+        })
+        .then(response => response.json())
+        .then(response => {
+            developer = response[0];
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+    return developer;
+}
+
+async function getGenres(id) {
+    let genre;
+
+    await fetch(
+        'https://api.igdb.com/v4/genres',
+        { method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+          },
+          body: `where id = ${id}; fields *;`,
+      })
+      .then(response => response.json())
+      .then(response => {
+        genre = response[0];
+      })
+        .catch(err => {
+            console.error(err);
+        });
+
+    return genre.name;
+}
+
+async function getFranchise(id) {
+
+    let franchise;
+
+    await fetch(
+        'https://api.igdb.com/v4/franchises',
+        { method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+        },
+        body: `where id = ${id}; fields *;`,
+    })
+    .then(response => response.json())
+    .then(response => {
+        franchise = response[0];
+    })
+      .catch(err => {
+          console.error(err);
+      });
+
+    return franchise.name;
+}
+
 module.exports = {
     getCoverURL,
     getPlatformID,
     getGameJson,
     getReleaseDates,
+    getCompanyInfo,
+    getGenres,
+    getFranchise,
 };
