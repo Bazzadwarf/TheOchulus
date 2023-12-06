@@ -50,19 +50,23 @@ module.exports = {
             genres.push(genre);
         }
 
-        const embed = new EmbedBuilder()
-        .setColor(0x6441a5)
-        .setTitle(`${game.name}`)
-        .setURL(`${game.url}`)
-        .setThumbnail(`${coverUrl}`)
-        .addFields({ name: 'Description', value: `${game.summary}` })
-        .addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true })
-        .addFields({ name: 'Release Date', value: `${release_date}`, inline: true })
-        .addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true })
-        .addFields({ name: 'Rating', value: `${game.total_rating.toFixed(0)} / 100, ${game.total_rating_count } ratings`, inline: true })
-        .addFields({ name: 'ID', value: `${game.id}`, inline: true })
-        .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
-        .setTimestamp();
+        const embed = new EmbedBuilder();
+        embed.setColor(0x6441a5);
+        embed.setTitle(`${game.name}`);
+        embed.setURL(`${game.url}`);
+        embed.setThumbnail(`${coverUrl}`);
+        embed.addFields({ name: 'Description', value: `${game.summary}` });
+        embed.addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true });
+        embed.addFields({ name: 'Release Date', value: `${release_date}`, inline: true });
+        embed.addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true });
+
+        if (game.total_rating) {
+            embed.addFields({ name: 'Rating', value: `${game.total_rating.toFixed(0)} / 100, ${game.total_rating_count } ratings`, inline: true });
+        }
+
+        embed.addFields({ name: 'ID', value: `${game.id}`, inline: true });
+        embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
+        embed.setTimestamp();
 
         if (game.franchises) {
             const franchise = await getFranchise(game.franchises);
