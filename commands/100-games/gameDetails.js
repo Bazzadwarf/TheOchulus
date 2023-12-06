@@ -38,12 +38,6 @@ module.exports = {
 
         const release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(game.first_release_date * 1000);
 
-        const companies = [];
-        for (const company of game.involved_companies) {
-            const info = await getCompanyInfo(company);
-            companies.push(info.name);
-        }
-
         const genres = [];
         for (const genreId of game.genres) {
             const genre = await getGenres(genreId);
@@ -56,7 +50,18 @@ module.exports = {
         embed.setURL(`${game.url}`);
         embed.setThumbnail(`${coverUrl}`);
         embed.addFields({ name: 'Description', value: `${game.summary}` });
-        embed.addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true });
+
+        if (game.involved_companies) {
+            const companies = [];
+
+            for (const company of game.involved_companies) {
+                const info = await getCompanyInfo(company);
+                companies.push(info.name);
+            }
+
+            embed.addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true });
+        }
+
         embed.addFields({ name: 'Release Date', value: `${release_date}`, inline: true });
         embed.addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true });
 
