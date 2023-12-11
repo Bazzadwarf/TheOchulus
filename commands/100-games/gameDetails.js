@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getCoverURL, getGameJson, getCompanyInfo, getGenres, getFranchise } = require('../../igdbHelperFunctions.js');
+const { getCoverURL, getGameJson, getCompanyInfo, getGenres, getFranchise, getReleaseDates } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,13 +30,21 @@ module.exports = {
 
         if (!games[0]) return interaction.followUp('No game found.');
 
-        await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
+        // await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
+        await games.sort((a, b) => {
+            return (a.total_rating_count == null) - (b.total_rating_count == null) || +(a.total_rating_count > b.total_rating_count) || -(a.total_rating_count < b.total_rating_count);
+        });
 
         const game = games[0];
 
         const coverUrl = await getCoverURL(game.cover);
 
-        const release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(game.first_release_date * 1000);
+        let release_date;
+        if (game.first_release_date) {
+            release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(game.first_release_date * 1000);
+        } else if (game.release_dates) {
+            release_date = await getReleaseDates(game.release_dates[0]);
+        }
 
         const genres = [];
         for (const genreId of game.genres) {
@@ -44,6 +52,7 @@ module.exports = {
             genres.push(genre);
         }
 
+        // Build Embed
         const embed = new EmbedBuilder();
         embed.setColor(0x6441a5);
         embed.setTitle(`${game.name}`);
@@ -56,7 +65,9 @@ module.exports = {
 
             for (const company of game.involved_companies) {
                 const info = await getCompanyInfo(company);
-                companies.push(info.name);
+                if (info.name) {
+                    companies.push(info.name);
+                }
             }
 
             embed.addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true });
@@ -69,7 +80,6 @@ module.exports = {
             embed.addFields({ name: 'Rating', value: `${game.total_rating.toFixed(0)} / 100, ${game.total_rating_count } ratings`, inline: true });
         }
 
-        embed.addFields({ name: 'ID', value: `${game.id}`, inline: true });
         embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
         embed.setTimestamp();
 
@@ -77,6 +87,8 @@ module.exports = {
             const franchise = await getFranchise(game.franchises);
             embed.addFields({ name: 'Franchise', value: `${franchise}`, inline: true });
         }
+
+        embed.addFields({ name: 'ID', value: `${game.id}`, inline: true });
 
         return interaction.followUp({ embeds: [embed] });
     },
