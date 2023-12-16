@@ -17,9 +17,7 @@ async function getCoverURL(id) {
                 url = 'https:'.concat(response[0].url);
             }
         })
-        .then(response => {
-            url = url.replace('t_thumb', 't_1080p_2x');
-        })
+        .then(url = url.replace('t_thumb', 't_1080p_2x'))
         .catch(err => {
             console.error(err);
         });
