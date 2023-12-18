@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
+const { checkUserRegistration, checkGameStorage, getUserRegistration, createBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,6 +12,10 @@ module.exports = {
         .addStringOption(option => option.setName('datebeaten').setDescription('The date you beat the game (today if empty).'))
         .addStringOption(option => option.setName('platform').setDescription('The platform the game was released on.')),
     async execute(interaction) {
+
+        if (!checkUserRegistration(interaction.user)) return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
+        const userDatabaseEntry = await getUserRegistration(interaction.user);
+
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
         const platform = interaction.options.getString('platform');
@@ -31,6 +36,10 @@ module.exports = {
 
         if (!res[0]) return interaction.reply('No game found for the options supplied.');
 
+        const gameDatabaseEntry = await checkGameStorage(res[0]);
+
+        await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry);
+        const num = await getBeatenGameCount(userDatabaseEntry);
         const coverUrl = await getCoverURL(res[0].cover);
 
         const embed = new EmbedBuilder()
@@ -38,7 +47,7 @@ module.exports = {
             .setAuthor({ name: `${interaction.user.displayName} beat a new game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${res[0].name} beaten!`)
             .setThumbnail(`${coverUrl}`)
-            .setDescription(`${interaction.user.displayName} has beaten 69 games, they have 31 games remaining.`)
+            .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
