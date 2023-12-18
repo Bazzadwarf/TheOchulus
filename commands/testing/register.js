@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { Users } = require ('../../dbObjects.js');
+const { checkUserRegistration } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,16 +10,8 @@ module.exports = {
         // interaction.user is the object representing the user who ran the command
         // interaction.member is the GuildMember object, which represents the user in the specific guild
 
-        const user = await Users.findOne({ where: { discord_id: interaction.user.id } })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-        if (user) return interaction.reply(`User "${interaction.user.username}" is already registered`);
+        if (checkUserRegistration(interaction.user)) return interaction.reply(`User "${interaction.user.username}" is registered`);
 
-        await Users.create({ discord_id: interaction.user.id, username: interaction.user.username })
-        .then(await interaction.reply(`${interaction.user.username} was manually registered.`))
-        .catch((err) => {
-            console.log(err);
-        });
+        return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
     },
 };
