@@ -14,7 +14,6 @@ require('./models/beatenGames.js')(sequelize, Sequelize.DataTypes);
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
 sequelize.sync({ force }).then(async () => {
-    // await Promise.all();
     console.log('Database synced');
     sequelize.close();
 }).catch(console.error);
