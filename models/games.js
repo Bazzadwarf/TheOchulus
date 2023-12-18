@@ -1,8 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     return sequelize.define('games', {
-        id: {
+        igdb_id: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
         },
         name: {
             type: DataTypes.STRING,
