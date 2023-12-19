@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
-const { checkUserRegistration, checkGameStorage, getUserRegistration, createBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { checkGameStorage, getUserRegistration, createBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,8 +11,8 @@ module.exports = {
         .addStringOption(option => option.setName('datebeaten').setDescription('The date you beat the game (today if empty).')),
     async execute(interaction) {
 
-        if (!checkUserRegistration(interaction.user)) return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
         const userDatabaseEntry = await getUserRegistration(interaction.user);
+        if (!userDatabaseEntry) return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
 
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
