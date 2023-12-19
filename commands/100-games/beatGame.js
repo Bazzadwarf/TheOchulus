@@ -8,9 +8,7 @@ module.exports = {
         .setDescription('Log a game that you have beat towards the 100 game challenge!')
         .addStringOption(option => option.setName('gamename').setDescription('The name of the game.'))
         .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0))
-        .addStringOption(option => option.setName('datestarted').setDescription('The date you started playing the game (today if empty).'))
-        .addStringOption(option => option.setName('datebeaten').setDescription('The date you beat the game (today if empty).'))
-        .addStringOption(option => option.setName('platform').setDescription('The platform the game was released on.')),
+        .addStringOption(option => option.setName('datebeaten').setDescription('The date you beat the game (today if empty).')),
     async execute(interaction) {
 
         if (!checkUserRegistration(interaction.user)) return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
@@ -18,7 +16,6 @@ module.exports = {
 
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
-        const platform = interaction.options.getString('platform');
 
         if (!gamename && !gameid) return interaction.reply('No gamename or gameid supplied, please supply an option to register a game!');
 
@@ -28,6 +25,7 @@ module.exports = {
             body = body.concat('where id = ', gameid, '; ');
         } else if (gamename) {
             body = body.concat('search "', gamename, '"; ');
+            body = body.concat('limit 25; where (category = 0 | category = 4) & version_parent = null;');
         }
 
         body = body.concat('fields *;');
@@ -36,16 +34,21 @@ module.exports = {
 
         if (!res[0]) return interaction.reply('No game found for the options supplied.');
 
-        const gameDatabaseEntry = await checkGameStorage(res[0]);
+        const game = res[0];
+        const release_date = game.first_release_date;
+        if (!release_date || (release_date * 1000) > Date.now()) return interaction.reply(`${game.name} is not yet released.`);
 
-        await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry);
+        const gameDatabaseEntry = await checkGameStorage(game);
+
+        if (!(await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.reply(`${game.name} already beaten.`);
+
         const num = await getBeatenGameCount(userDatabaseEntry);
-        const coverUrl = await getCoverURL(res[0].cover);
+        const coverUrl = await getCoverURL(game.cover);
 
         const embed = new EmbedBuilder()
             .setColor(0xFFD700)
             .setAuthor({ name: `${interaction.user.displayName} beat a new game!`, iconURL: interaction.user.avatarURL() })
-            .setTitle(`${res[0].name} beaten!`)
+            .setTitle(`${game.name} beaten!`)
             .setThumbnail(`${coverUrl}`)
             .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
