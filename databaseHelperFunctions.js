@@ -65,6 +65,17 @@ async function checkGameStorage(game) {
     return null;
 }
 
+async function checkGameStorageId(id) {
+    const g = await Games.findOne({ where: { id: id } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (g) return g;
+
+    return null;
+}
+
 async function createBeatenGameEntry(user, game) {
     let bg = await BeatenGames.findOne({ where: { userId: user.id, gameId: game.id } })
     .catch((err) => {
@@ -99,10 +110,43 @@ async function getBeatenGameCount(user) {
     return count;
 }
 
+async function deleteBeatenGameId(id, user) {
+    const bg = await BeatenGames.findOne({ where: { id: id, userId: user.id } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (!bg) return false;
+
+    const entry = bg;
+    await bg.destroy();
+
+    return entry;
+}
+
+async function deleteBeatenGameNum(num, user) {
+    const bg = await BeatenGames.findAll({ where: { userId: user.id } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (!bg) return false;
+
+    if (bg.length < num) return false;
+
+    const entry = bg[num - 1];
+    await bg[num - 1].destroy();
+
+    return entry;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
     checkGameStorage,
     createBeatenGameEntry,
     getBeatenGameCount,
+    deleteBeatenGameId,
+    deleteBeatenGameNum,
+    checkGameStorageId,
 };
