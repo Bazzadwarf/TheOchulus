@@ -140,6 +140,30 @@ async function deleteBeatenGameNum(num, user) {
     return entry;
 }
 
+async function getLeaderboardEntries() {
+    const users = await Users.findAll()
+    .catch((err) => {
+        console.log(err);
+    });
+
+    const results = [];
+
+    for (let i = 0; i < users.length; i++) {
+        const count = await BeatenGames.count({ where: { userId: users[i].id } });
+
+        const res = await Users.findOne({ where: { id: users[i].id } })
+        .catch((err) => {
+            console.log(err);
+        });
+        const username = res.username;
+
+        const fun = { username, count };
+        results.push(fun);
+    }
+
+    return results;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -149,4 +173,5 @@ module.exports = {
     deleteBeatenGameId,
     deleteBeatenGameNum,
     checkGameStorageId,
+    getLeaderboardEntries,
 };
