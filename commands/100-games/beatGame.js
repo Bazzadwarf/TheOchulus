@@ -7,8 +7,7 @@ module.exports = {
         .setName('beatgame')
         .setDescription('Log a game that you have beat towards the 100 game challenge!')
         .addStringOption(option => option.setName('gamename').setDescription('The name of the game.'))
-        .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0))
-        .addStringOption(option => option.setName('datebeaten').setDescription('The date you beat the game (today if empty).')),
+        .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0)),
     async execute(interaction) {
 
         const userDatabaseEntry = await getUserRegistration(interaction.user);
