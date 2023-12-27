@@ -31,7 +31,7 @@ module.exports = {
 
         const res = await getGameJson(body);
 
-        if (!res[0]) return interaction.reply({ content: 'No game found for the options supplied.', ephemeral: true});
+        if (!res[0]) return interaction.reply({ content: 'No game found for the options supplied.', ephemeral: true });
 
         const game = res[0];
         const release_date = game.first_release_date;
