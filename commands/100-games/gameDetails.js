@@ -30,9 +30,7 @@ module.exports = {
 
         if (!games[0]) return interaction.followUp('No game found.');
 
-        await games.sort((a, b) => {
-            return (a.total_rating_count == null) - (b.total_rating_count == null) || +(a.total_rating_count > b.total_rating_count) || -(a.total_rating_count < b.total_rating_count);
-        });
+        await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
         const game = games[0];
 
