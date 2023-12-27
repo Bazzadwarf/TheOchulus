@@ -172,6 +172,17 @@ async function getRecentGameEntry(userId) {
     return false;
 }
 
+async function getGames(id) {
+    const beatenGameEntry = await BeatenGames.findAll({ where: { userId: id } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (beatenGameEntry) return beatenGameEntry;
+
+    return false;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -183,4 +194,5 @@ module.exports = {
     checkGameStorageId,
     getLeaderboardEntries,
     getRecentGameEntry,
+    getGames,
 };
