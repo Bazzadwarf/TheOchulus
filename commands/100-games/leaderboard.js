@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         const leaderboard = await getLeaderboardEntries();
 
-        if (!leaderboard) return interaction.reply('There was a problem!');
+        if (!leaderboard) return interaction.reply({ content: 'There was a problem!', ephemeral: true });
 
         await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
         let desc = '';

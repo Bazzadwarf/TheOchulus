@@ -12,7 +12,7 @@ module.exports = {
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
 
-        if (!gamename && !gameid) return interaction.reply('No gamename or gameid supplied, please supply an option to register a game!');
+        if (!gamename && !gameid) return interaction.reply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
 
         let body = '';
 
@@ -28,7 +28,7 @@ module.exports = {
 
         const games = await getGameJson(body);
 
-        if (!games[0]) return interaction.followUp('No game found.');
+        if (!games[0]) return interaction.followUp({ content: 'No game found.', ephemeral: true });
 
         await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 

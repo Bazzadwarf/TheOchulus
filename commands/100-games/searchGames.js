@@ -9,13 +9,13 @@ module.exports = {
 
 	async execute(interaction) {
         const gamename = interaction.options.getString('gamename');
-        await interaction.reply(`Searching for ${gamename}...`);
+        await interaction.reply({ content: `Searching for ${gamename}...`, ephemeral: true });
 
         let games = await searchGamesWithMinimumReview(gamename);
 
         if (games.length == 0) games = await searchGamesWithoutMinimumReview(gamename);
 
-        if (games.length == 0) return interaction.followUp('No games found.');
+        if (games.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
 
         await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 

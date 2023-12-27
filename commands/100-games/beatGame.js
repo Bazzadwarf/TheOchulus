@@ -12,12 +12,12 @@ module.exports = {
     async execute(interaction) {
 
         const userDatabaseEntry = await getUserRegistration(interaction.user);
-        if (!userDatabaseEntry) return interaction.reply(`Issue checking registration with "${interaction.user.username}".`);
+        if (!userDatabaseEntry) return interaction.reply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
 
-        if (!gamename && !gameid) return interaction.reply('No gamename or gameid supplied, please supply an option to register a game!');
+        if (!gamename && !gameid) return interaction.reply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
 
         let body = '';
 
@@ -32,15 +32,15 @@ module.exports = {
 
         const res = await getGameJson(body);
 
-        if (!res[0]) return interaction.reply('No game found for the options supplied.');
+        if (!res[0]) return interaction.reply({ content: 'No game found for the options supplied.', ephemeral: true});
 
         const game = res[0];
         const release_date = game.first_release_date;
-        if (!release_date || (release_date * 1000) > Date.now()) return interaction.reply(`${game.name} is not yet released.`);
+        if (!release_date || (release_date * 1000) > Date.now()) return interaction.reply({ content: `${game.name} is not yet released.`, ephemeral: true });
 
         const gameDatabaseEntry = await checkGameStorage(game);
 
-        if (!(await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.reply(`${game.name} already beaten.`);
+        if (!(await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.reply({ content: `${game.name} already beaten.`, ephemeral: true });
 
         const num = await getBeatenGameCount(userDatabaseEntry);
         const coverUrl = await getCoverURL(game.cover);

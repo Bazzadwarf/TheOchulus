@@ -11,7 +11,7 @@ module.exports = {
         const databaseEntryId = interaction.options.getNumber('databaseentryid');
         const beatGameNumber = interaction.options.getNumber('beatgamenumber');
 
-        if (!databaseEntryId && !beatGameNumber) return interaction.reply('No parameters supplied');
+        if (!databaseEntryId && !beatGameNumber) return interaction.reply({ content: 'No parameters supplied.', ephemeral: true });
 
         const userDatabaseEntry = await getUserRegistration(interaction.user);
         let result;
@@ -26,6 +26,6 @@ module.exports = {
             return interaction.reply(`${game.name} successfully deleted`);
         }
 
-        return interaction.reply('Unable to delete entry / No entry found.');
+        return interaction.reply({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
     },
 };
