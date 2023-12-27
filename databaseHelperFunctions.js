@@ -2,17 +2,7 @@ const { Users, Games, BeatenGames } = require ('./dbObjects.js');
 
 async function checkUserRegistration(user) {
 
-    let u = await Users.findOne({ where: { discord_id: user.id } })
-    .catch((err) => {
-        console.log(err);
-    });
-
-    if (u) return true;
-
-    await Users.create({ discord_id: user.id, username: user.username })
-    .then((data) => {
-        u = data;
-    })
+    const u = await Users.findOne({ where: { discord_id: user.id } })
     .catch((err) => {
         console.log(err);
     });
@@ -164,6 +154,24 @@ async function getLeaderboardEntries() {
     return results;
 }
 
+async function getRecentGameEntry(userId) {
+    const beatenGameEntry = await BeatenGames.findOne({ where: { userId: userId }, order: [ [ 'createdAt', 'DESC' ]] })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (!beatenGameEntry) return false;
+
+    const game = await Games.findOne({ where: { id: beatenGameEntry.gameId } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (game) return game;
+
+    return false;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -174,4 +182,5 @@ module.exports = {
     deleteBeatenGameNum,
     checkGameStorageId,
     getLeaderboardEntries,
+    getRecentGameEntry,
 };
