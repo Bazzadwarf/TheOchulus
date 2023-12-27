@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
-const { getUserRegistration, getRecentGameEntry } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getRecentGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -27,6 +27,7 @@ module.exports = {
         const game = res[0];
 
         const coverUrl = await getCoverURL(game.cover);
+        const num = await getBeatenGameCount(userDatabaseEntry);
 
         const embed = new EmbedBuilder()
             .setColor(0xFFD700)
@@ -35,7 +36,7 @@ module.exports = {
             .setThumbnail(`${coverUrl}`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp()
-            .addFields({ name: 'Description', value: `${game.summary}` });
+            .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`);
 
         return interaction.reply({ embeds: [embed] });
     },
