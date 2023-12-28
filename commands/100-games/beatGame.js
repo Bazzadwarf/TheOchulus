@@ -13,6 +13,9 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(interaction.user);
         if (!userDatabaseEntry) return interaction.reply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
+        const oldnum = await getBeatenGameCount(userDatabaseEntry);
+        if (oldnum >= 100) return interaction.reply({ content: 'You have already completed the 100 Games Challenge.', ephemeral: true });
+
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
 
@@ -53,6 +56,18 @@ module.exports = {
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
-        return interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed] });
+
+        if (num == 100) {
+            const challengeCompletedEmbed = new EmbedBuilder()
+            .setColor(0xFFD700)
+            .setAuthor({ name: `${interaction.user.displayName} has completed the 100 Game Challenge!`, iconURL: interaction.user.avatarURL() })
+            .setTitle(`Congratulations ${interaction.user.displayName}, you have completed the 100 Game Challenge!`)
+            .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
+            .setTimestamp()
+            .setImage('https://c.tenor.com/82zAqfFm7OMAAAAC/tenor.gif');
+
+            await interaction.followUp({ embeds: [challengeCompletedEmbed] });
+        }
     },
 };
