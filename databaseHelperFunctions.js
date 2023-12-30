@@ -101,7 +101,7 @@ async function getBeatenGameCount(user) {
 }
 
 async function deleteBeatenGameId(id, user) {
-    const bg = await BeatenGames.findOne({ where: { id: id, userId: user.id } })
+    const bg = await BeatenGames.findOne({ where: { gameId: id, userId: user.id } })
     .catch((err) => {
         console.log(err);
     });
