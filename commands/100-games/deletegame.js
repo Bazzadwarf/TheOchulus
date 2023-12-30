@@ -3,7 +3,7 @@ const { getUserRegistration, deleteBeatenGameNum, checkGameStorageId } = require
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('deletegameentry')
+        .setName('deletegame')
         .setDescription('Delete a game that you have beaten from the 100 game challenge!')
         .addNumberOption(option => option.setName('beatgamenumber').setDescription('Index of the game to delete in the list of beaten games.').setMinValue(1).setMaxValue(100)),
     async execute(interaction) {
@@ -14,6 +14,9 @@ module.exports = {
 
         if (beatGameNumber) {
             result = await deleteBeatenGameNum(beatGameNumber, userDatabaseEntry);
+        }
+        else {
+            // TODO: Delete most recent game entry.
         }
 
         if (result) {
