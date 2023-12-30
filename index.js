@@ -48,7 +48,7 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(process.env.token);
+client.login(process.env.discordToken);
 
 client.once(Events.ClientReady, () => {
 	console.log(`Logged in as ${client.user.tag}!`);

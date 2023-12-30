@@ -19,4 +19,29 @@ BeatenGames.belongsTo(Users);
 Games.hasMany(BeatenGames);
 BeatenGames.belongsTo(Games);
 
+Reflect.defineProperty(Users.prototype, 'addUser', {
+    value: async function addUser(userData) {
+        const user = await Users.findOne({
+            where: { user_id: userData.id },
+        });
+
+        if (!user) {
+            return Users.create({ user_id: userData.discord_id, username: userData.username });
+        }
+    },
+});
+
+Reflect.defineProperty(Users.prototype, 'getUser', {
+    value: function getUser(userData) {
+        return Users.findAll({
+            where: { user_id: userData.discord_id },
+        });
+    },
+});
+
+sequelize.sync({ alter: true })
+.catch((err) => {
+    console.log(err);
+});
+
 module.exports = { Users, Games, BeatenGames };
