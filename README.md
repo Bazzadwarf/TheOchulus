@@ -76,6 +76,10 @@ Get the details of a game from the IGDB database.
     - `gamename` - The name of the game.
     - `gameid` - The IGDB game ID.
 
+## /info
+
+Get info on the bot.
+
 ## /leaderboard
 
 Shows the leaderboard for the 100 Game Challenge.
