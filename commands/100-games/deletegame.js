@@ -16,7 +16,8 @@ module.exports = {
             result = await deleteBeatenGameNum(beatGameNumber, userDatabaseEntry);
         }
         else {
-            // TODO: Delete most recent game entry.
+            const recentGame = await getRecentGameEntry(userDatabaseEntry.id);
+            result = await deleteBeatenGameId(recentGame.id, userDatabaseEntry);
         }
 
         if (result) {
