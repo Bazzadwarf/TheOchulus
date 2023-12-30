@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { getUserRegistration, deleteBeatenGameNum, checkGameStorageId } = require('../../databaseHelperFunctions.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { getUserRegistration, deleteBeatenGameNum, checkGameStorageId, getRecentGameEntry, deleteBeatenGameId, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,8 +22,25 @@ module.exports = {
         }
 
         if (result) {
-            const game = await checkGameStorageId(result.gameId);
-            return interaction.reply(`${game.name} successfully deleted`);
+            const gameDatabaseEntry = await checkGameStorageId(result.gameId);
+            const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
+            const res = await getGameJson(body);
+            if (!res) return interaction.reply({ content: 'No game found.', ephemeral: true });
+            const game = res[0];
+
+            const num = await getBeatenGameCount(userDatabaseEntry);
+            const coverUrl = await getCoverURL(game.cover);
+
+            const embed = new EmbedBuilder()
+            .setColor(0xFF0000)
+            .setAuthor({ name: `${interaction.user.displayName} deleted a game!`, iconURL: interaction.user.avatarURL() })
+            .setTitle(`${game.name} deleted!`)
+            .setThumbnail(`${coverUrl}`)
+            .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`)
+            .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
+            .setTimestamp();
+
+            return interaction.reply({ embeds: [embed] });
         }
 
         return interaction.reply({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
