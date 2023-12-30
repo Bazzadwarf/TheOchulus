@@ -7,6 +7,7 @@ const { config } = require('dotenv');
 config();
 
 const { igdb } = require('./igdb.js');
+const { backupDatabase } = require('./databaseHelperFunctions.js');
 new igdb();
 
 // Create a new client instance
@@ -56,3 +57,15 @@ client.once(Events.ClientReady, () => {
 
 require('sequelize');
 require('./dbObjects.js');
+
+if (!fs.existsSync('./backups')) {
+	fs.mkdir('./backups', (err) => {
+		console.log(err);
+	});
+}
+
+setInterval(() => {
+	backupDatabase();
+}, 86000000);
+
+backupDatabase();
