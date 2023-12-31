@@ -8,6 +8,8 @@ module.exports = {
     .setDescription('Show the list of games you have beaten.')
     .addUserOption(option => option.setName('user').setDescription('The user to check')),
     async execute(interaction) {
+        await interaction.reply({ content: 'Searching for user...', ephemeral: true });
+
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
 
@@ -16,9 +18,7 @@ module.exports = {
         }
 
         const userDatabaseEntry = await getUserRegistration(user);
-        if (!userDatabaseEntry) return interaction.reply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
-
-        await interaction.reply({ content: `Searching for ${user.username}...`, ephemeral: true });
+        if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
         const beatenGamesDatabaseEntries = await getGames(userDatabaseEntry.id);
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
