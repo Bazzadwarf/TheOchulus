@@ -8,6 +8,8 @@ module.exports = {
         .setDescription('Delete a game that you have beaten from the 100 game challenge!')
         .addNumberOption(option => option.setName('beatgamenumber').setDescription('Index of the game to delete in the list of beaten games.').setMinValue(1).setMaxValue(100)),
     async execute(interaction) {
+        await interaction.reply({ content: 'Searching for user...', ephemeral: true });
+
         const beatGameNumber = interaction.options.getNumber('beatgamenumber');
 
         const userDatabaseEntry = await getUserRegistration(interaction.user);
@@ -25,7 +27,7 @@ module.exports = {
             const gameDatabaseEntry = await checkGameStorageId(result.gameId);
             const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
             const res = await getGameJson(body);
-            if (!res) return interaction.reply({ content: 'No game found.', ephemeral: true });
+            if (!res) return interaction.followUp({ content: 'No game found.', ephemeral: true });
             const game = res[0];
 
             const num = await getBeatenGameCount(userDatabaseEntry);
@@ -40,9 +42,9 @@ module.exports = {
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
-            return interaction.reply({ embeds: [embed] });
+            return interaction.followUp({ embeds: [embed] });
         }
 
-        return interaction.reply({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
+        return interaction.followUp({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
     },
 };
