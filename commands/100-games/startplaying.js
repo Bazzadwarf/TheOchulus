@@ -4,8 +4,8 @@ const { checkGameStorage, getUserRegistration, createPlayingGameEntry, getBeaten
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('nowplaying')
-        .setDescription('Log a game that you are currently playing towards the 100 game challenge!')
+        .setName('startplaying')
+        .setDescription('Log a game that you have started playing towards the 100 game challenge!')
         .addStringOption(option => option.setName('gamename').setDescription('The name of the game.').setRequired(true))
         .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0)),
     async execute(interaction) {
