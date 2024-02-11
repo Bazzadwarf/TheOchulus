@@ -36,9 +36,6 @@ module.exports = {
         if (!res[0]) return interaction.followUp({ content: 'No game found for the options supplied.', ephemeral: true });
 
         const game = res[0];
-        const release_date = game.first_release_date;
-        if (!release_date || (release_date * 1000) > Date.now()) return interaction.followUp({ content: `${game.name} is not yet released.`, ephemeral: true });
-
         const gameDatabaseEntry = await checkGameStorage(game);
 
         if (!(await createPlanningGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.followUp({ content: `${game.name} already planned.`, ephemeral: true });
