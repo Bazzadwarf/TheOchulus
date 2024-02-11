@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUserRegistration, deleteBeatenGameNum, checkGameStorageId, getRecentGameEntry, deleteBeatenGameId, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, deleteBeatenGameNum, checkGameStorageId, getRecentBeatenGameEntry, deleteBeatenGameId, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
             result = await deleteBeatenGameNum(beatGameNumber, userDatabaseEntry);
         }
         else {
-            const recentGame = await getRecentGameEntry(userDatabaseEntry.id);
+            const recentGame = await getRecentBeatenGameEntry(userDatabaseEntry.id);
             result = await deleteBeatenGameId(recentGame.id, userDatabaseEntry);
         }
 

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
-const { getUserRegistration, getRecentGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getRecentBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,7 +18,7 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.reply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
-        const gameDatabaseEntry = await getRecentGameEntry(userDatabaseEntry.id);
+        const gameDatabaseEntry = await getRecentBeatenGameEntry(userDatabaseEntry.id);
         if (!gameDatabaseEntry) return interaction.reply({ content: 'No game found.', ephemeral: true });
 
         const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
