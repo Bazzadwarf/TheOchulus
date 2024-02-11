@@ -74,7 +74,9 @@ async function createPlanningGameEntry(user, game) {
 
     if (entry.status == 'planning') return false;
 
-    entry.update({ status: 'planning' });
+    entry.status = 'planning';
+
+    await entry.save();
 
     return entry;
 }
@@ -86,8 +88,10 @@ async function createPlayingGameEntry(user, game) {
 
     if (entry.status == 'playing') return false;
 
-    entry.save({ status: 'playing' });
+    entry.status = 'playing';
 
+    await entry.save();
+    
     return entry;
 }
 
@@ -98,7 +102,9 @@ async function createBeatenGameEntry(user, game) {
 
     if (entry.status == 'beat') return false;
 
-    entry.update({ status: 'beat' });
+    entry.status = 'beat';
+
+    await entry.save();
 
     return entry;
 }
@@ -246,7 +252,7 @@ async function getRecentBeatenGameEntry(userId) {
 }
 
 async function getRecentGameEntry(userId, status) {
-    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'createdAt', 'DESC' ]] })
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'updatedAt', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -263,13 +269,25 @@ async function getRecentGameEntry(userId, status) {
     return false;
 }
 
-async function getGames(id) {
-    const beatenGameEntry = await LoggedGames.findAll({ where: { userId: id, status: 'beat' } })
+async function getPlanningGames(id) {
+    return await getGames(id, 'planning');
+}
+
+async function getPlayingGames(id) {
+    return await getGames(id, 'playing');
+}
+
+async function getBeatenGames(id) {
+    return await getGames(id, 'beat');
+}
+
+async function getGames(id, status) {
+    const gameEntries = await LoggedGames.findAll({ where: { userId: id, status: status }, order: [ [ 'updatedAt', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
 
-    if (beatenGameEntry) return beatenGameEntry;
+    if (gameEntries) return gameEntries;
 
     return false;
 }
@@ -309,6 +327,9 @@ module.exports = {
     getRecentPlayingGameEntry,
     getRecentBeatenGameEntry,
     getRecentGameEntry,
+    getPlanningGames,
+    getPlayingGames,
+    getBeatenGames,
     getGames,
     backupDatabase,
 };
