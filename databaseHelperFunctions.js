@@ -67,8 +67,20 @@ async function checkGameStorageId(id) {
     return null;
 }
 
+async function createPlanningGameEntry(user, game) {
+    return createLoggedGameEntry(user, game, 'planning');
+}
+
+async function createPlayingGameEntry(user, game) {
+    return createLoggedGameEntry(user, game, 'playing');
+}
+
 async function createBeatenGameEntry(user, game) {
-    let bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id, status: 'beat' } })
+    return createLoggedGameEntry(user, game, 'beat');
+}
+
+async function createLoggedGameEntry(user, game, status) {
+    let bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id, status: status } })
     .catch((err) => {
         console.log(err);
     });
@@ -88,7 +100,19 @@ async function createBeatenGameEntry(user, game) {
     return false;
 }
 
+async function getPlanningGameCount(user) {
+    return getLoggedGameCount(user, 'planning');
+}
+
+async function getPlayingGameCount(user) {
+    return getLoggedGameCount(user, 'playing');
+}
+
 async function getBeatenGameCount(user) {
+    return getLoggedGameCount(user, 'beat');
+}
+
+async function getLoggedGameCount(user, status) {
     const u = await Users.findOne({ where: { id: user.id } })
     .catch((err) => {
         console.log(err);
@@ -96,13 +120,25 @@ async function getBeatenGameCount(user) {
 
     if (!u) return -1;
 
-    const count = await u.countBeatenGames();
+    const count = await u.countBeatenGames({ where: { status: status } });
 
     return count;
 }
 
+async function deletePlanningGameId(id, user) {
+    return deleteLoggedGameId(id, user, 'planning');
+}
+
+async function deletePlayingGameId(id, user) {
+    return deleteLoggedGameId(id, user, 'playing');
+}
+
 async function deleteBeatenGameId(id, user) {
-    const bg = await LoggedGames.findOne({ where: { gameId: id, userId: user.id, status: 'beat' } })
+    return deleteLoggedGameId(id, user, 'beat');
+}
+
+async function deleteLoggedGameId(id, user, status) {
+    const bg = await LoggedGames.findOne({ where: { gameId: id, userId: user.id, status: status } })
     .catch((err) => {
         console.log(err);
     });
@@ -115,8 +151,20 @@ async function deleteBeatenGameId(id, user) {
     return entry;
 }
 
+async function deletePlanningGameNum(num, user) {
+    return await deleteLoggedGameNum(num, user, 'planning');
+}
+
+async function deletePlayingGameNum(num, user) {
+    return await deleteLoggedGameNum(num, user, 'playing');
+}
+
 async function deleteBeatenGameNum(num, user) {
-    const bg = await LoggedGames.findAll({ where: { userId: user.id, status: 'beat' } })
+    return await deleteLoggedGameNum(num, user, 'beat');
+}
+
+async function deleteLoggedGameNum(num, user, status) {
+    const bg = await LoggedGames.findAll({ where: { userId: user.id, status: status } })
     .catch((err) => {
         console.log(err);
     });
@@ -155,8 +203,26 @@ async function getLeaderboardEntries() {
     return results;
 }
 
-async function getRecentGameEntry(userId) {
-    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: 'beat' }, order: [ [ 'createdAt', 'DESC' ]] })
+async function getRecentPlanningGameEntry(userId) {
+
+
+    return getRecentGameEntry(userId, 'planning');
+}
+
+async function getRecentPlayingGameEntry(userId) {
+
+
+    return getRecentGameEntry(userId, 'playing');
+}
+
+async function getRecentBeatenGameEntry(userId) {
+
+
+    return getRecentGameEntry(userId, 'beat');
+}
+
+async function getRecentGameEntry(userId, status) {
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'createdAt', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -199,12 +265,25 @@ module.exports = {
     checkUserRegistration,
     getUserRegistration,
     checkGameStorage,
+    createPlanningGameEntry,
+    createPlayingGameEntry,
     createBeatenGameEntry,
+    createLoggedGameEntry,
+    getPlanningGameCount,
+    getPlayingGameCount,
     getBeatenGameCount,
+    getLoggedGameCount,
+    deletePlanningGameId,
+    deletePlayingGameId,
     deleteBeatenGameId,
+    deletePlanningGameNum,
+    deletePlayingGameNum,
     deleteBeatenGameNum,
     checkGameStorageId,
     getLeaderboardEntries,
+    getRecentPlanningGameEntry,
+    getRecentPlayingGameEntry,
+    getRecentBeatenGameEntry,
     getRecentGameEntry,
     getGames,
     backupDatabase,
