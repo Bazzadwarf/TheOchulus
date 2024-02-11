@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUserRegistration, getGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
 const { getGameJson } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
@@ -20,7 +20,7 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-        const beatenGamesDatabaseEntries = await getGames(userDatabaseEntry.id);
+        const beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
 
         let desc = '';
