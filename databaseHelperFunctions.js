@@ -68,26 +68,56 @@ async function checkGameStorageId(id) {
 }
 
 async function createPlanningGameEntry(user, game) {
-    return createLoggedGameEntry(user, game, 'planning');
+    const entry = await checkLoggedGameEntry(user, game);
+
+    if (!entry) return await createLoggedGameEntry(user, game, 'planning');
+
+    if (entry.status == 'planning') return false;
+
+    entry.update({ status: 'planning' });
+
+    return entry;
 }
 
 async function createPlayingGameEntry(user, game) {
-    return createLoggedGameEntry(user, game, 'playing');
+    const entry = await checkLoggedGameEntry(user, game);
+
+    if (!entry) return await createLoggedGameEntry(user, game, 'playing');
+
+    if (entry.status == 'playing') return false;
+
+    entry.save({ status: 'playing' });
+
+    return entry;
 }
 
 async function createBeatenGameEntry(user, game) {
-    return createLoggedGameEntry(user, game, 'beat');
+    const entry = await checkLoggedGameEntry(user, game);
+
+    if (!entry) return await createLoggedGameEntry(user, game, 'beat');
+
+    if (entry.status == 'beat') return false;
+
+    entry.update({ status: 'beat' });
+
+    return entry;
 }
 
-async function createLoggedGameEntry(user, game, status) {
-    let bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id, status: status } })
+async function checkLoggedGameEntry(user, game) {
+    const bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id } })
     .catch((err) => {
         console.log(err);
     });
 
-    if (bg) return false;
+    if (!bg) return false;
 
-    await LoggedGames.create({ userId: user.id, gameId: game.id })
+    return bg;
+}
+
+async function createLoggedGameEntry(user, game, status) {
+    let bg;
+
+    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status })
     .then((data) => {
         bg = data;
     })
@@ -101,15 +131,15 @@ async function createLoggedGameEntry(user, game, status) {
 }
 
 async function getPlanningGameCount(user) {
-    return getLoggedGameCount(user, 'planning');
+    return await getLoggedGameCount(user, 'planning');
 }
 
 async function getPlayingGameCount(user) {
-    return getLoggedGameCount(user, 'playing');
+    return await getLoggedGameCount(user, 'playing');
 }
 
 async function getBeatenGameCount(user) {
-    return getLoggedGameCount(user, 'beat');
+    return await getLoggedGameCount(user, 'beat');
 }
 
 async function getLoggedGameCount(user, status) {
@@ -126,15 +156,15 @@ async function getLoggedGameCount(user, status) {
 }
 
 async function deletePlanningGameId(id, user) {
-    return deleteLoggedGameId(id, user, 'planning');
+    return await deleteLoggedGameId(id, user, 'planning');
 }
 
 async function deletePlayingGameId(id, user) {
-    return deleteLoggedGameId(id, user, 'playing');
+    return await deleteLoggedGameId(id, user, 'playing');
 }
 
 async function deleteBeatenGameId(id, user) {
-    return deleteLoggedGameId(id, user, 'beat');
+    return await deleteLoggedGameId(id, user, 'beat');
 }
 
 async function deleteLoggedGameId(id, user, status) {
@@ -204,21 +234,15 @@ async function getLeaderboardEntries() {
 }
 
 async function getRecentPlanningGameEntry(userId) {
-
-
-    return getRecentGameEntry(userId, 'planning');
+    return await getRecentGameEntry(userId, 'planning');
 }
 
 async function getRecentPlayingGameEntry(userId) {
-
-
-    return getRecentGameEntry(userId, 'playing');
+    return await getRecentGameEntry(userId, 'playing');
 }
 
 async function getRecentBeatenGameEntry(userId) {
-
-
-    return getRecentGameEntry(userId, 'beat');
+    return await getRecentGameEntry(userId, 'beat');
 }
 
 async function getRecentGameEntry(userId, status) {
