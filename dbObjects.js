@@ -44,4 +44,4 @@ sequelize.sync({ alter: true })
     console.log(err);
 });
 
-module.exports = { Users, Games, BeatenGames };
+module.exports = { sequelize, Users, Games, BeatenGames };
