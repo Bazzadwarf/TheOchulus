@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
-const { checkGameStorage, getUserRegistration, createBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { checkGameStorage, getUserRegistration, createBeatenGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -46,7 +46,9 @@ module.exports = {
 
         if (!(await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.followUp({ content: `${game.name} already beaten.`, ephemeral: true });
 
-        const num = await getBeatenGameCount(userDatabaseEntry);
+        const beatNum = await getBeatenGameCount(userDatabaseEntry);
+        const planNum = await getPlanningGameCount(userDatabaseEntry);
+        const playNum = await getPlayingGameCount(userDatabaseEntry);
         const coverUrl = await getCoverURL(game.cover);
 
         const embed = new EmbedBuilder()
@@ -54,13 +56,13 @@ module.exports = {
             .setAuthor({ name: `${interaction.user.displayName} beat a new game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name} beaten!`)
             .setThumbnail(`${coverUrl}`)
-            .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`)
+            .setDescription(`${interaction.user.displayName} has ${planNum} games planned, they are playing ${playNum} games, they have beaten ${beatNum} games, they have ${100 - beatNum} games remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
         await interaction.followUp({ embeds: [embed] });
 
-        if (num == 100) {
+        if (beatNum == 100) {
             const challengeCompletedEmbed = new EmbedBuilder()
             .setColor(0xFFD700)
             .setAuthor({ name: `${interaction.user.displayName} has completed the 100 Game Challenge!`, iconURL: interaction.user.avatarURL() })
