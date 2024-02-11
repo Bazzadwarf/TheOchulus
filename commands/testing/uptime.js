@@ -43,10 +43,11 @@ module.exports = {
         const currentDate = `${currentYear}/${currentMonth}/${currentDay} ${currentHour}:${currentMinute}:${currentSecond}`;
 
         const embed = new EmbedBuilder()
+        
         .setColor(0xD36918)
         .setTitle('Current Uptime')
         .setThumbnail(interaction.client.user.avatarURL())
-        .setDescription(`The current uptime is **${currentUptime}**.\nThe last database backup was **${databaseBackup}**.\nThe current local time is **${currentDate}**.`)
+        .setDescription(`The current uptime is **${currentUptime}**.\nThe last database backup was **${databaseBackup}**ago.\nThe current local time is **${currentDate}**.`)
         .setTimestamp();
 
 		await interaction.reply({ embeds: [embed] });
