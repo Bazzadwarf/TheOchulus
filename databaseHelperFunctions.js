@@ -91,7 +91,7 @@ async function createPlayingGameEntry(user, game) {
     entry.status = 'playing';
 
     await entry.save();
-    
+
     return entry;
 }
 
@@ -252,7 +252,7 @@ async function getRecentBeatenGameEntry(userId) {
 }
 
 async function getRecentGameEntry(userId, status) {
-    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'updatedAt', 'ASC' ]] })
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'updatedAt', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });

@@ -20,10 +20,8 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-        let databaseEntries = await getPlayingGames(userDatabaseEntry.id);
+        const databaseEntries = await getPlayingGames(userDatabaseEntry.id);
         if (!databaseEntries || databaseEntries.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
-
-        databaseEntries = databaseEntries.reverse();
 
         let desc = '';
 
