@@ -49,7 +49,7 @@ module.exports = {
         const coverUrl = await getCoverURL(game.cover);
 
         const embed = new EmbedBuilder()
-            .setColor(0xFFD700)
+            .setColor(0x00C921)
             .setAuthor({ name: `${interaction.user.displayName} has started playing a new game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name}!`)
             .setThumbnail(`${coverUrl}`)
