@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 require('./dbObjects.js');
-const { sequelize, BeatenGames } = require ('./dbObjects.js');
+const { sequelize, LoggedGames } = require ('./dbObjects.js');
 
 // Add a new column to the existing table
 (async () => {

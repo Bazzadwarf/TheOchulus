@@ -1,4 +1,4 @@
-const { Users, Games, BeatenGames } = require ('./dbObjects.js');
+const { Users, Games, LoggedGames } = require ('./dbObjects.js');
 const fs = require('fs');
 
 async function checkUserRegistration(user) {
@@ -68,14 +68,14 @@ async function checkGameStorageId(id) {
 }
 
 async function createBeatenGameEntry(user, game) {
-    let bg = await BeatenGames.findOne({ where: { userId: user.id, gameId: game.id } })
+    let bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id, status: 'beat' } })
     .catch((err) => {
         console.log(err);
     });
 
     if (bg) return false;
 
-    await BeatenGames.create({ userId: user.id, gameId: game.id })
+    await LoggedGames.create({ userId: user.id, gameId: game.id })
     .then((data) => {
         bg = data;
     })
@@ -102,7 +102,7 @@ async function getBeatenGameCount(user) {
 }
 
 async function deleteBeatenGameId(id, user) {
-    const bg = await BeatenGames.findOne({ where: { gameId: id, userId: user.id } })
+    const bg = await LoggedGames.findOne({ where: { gameId: id, userId: user.id, status: 'beat' } })
     .catch((err) => {
         console.log(err);
     });
@@ -116,7 +116,7 @@ async function deleteBeatenGameId(id, user) {
 }
 
 async function deleteBeatenGameNum(num, user) {
-    const bg = await BeatenGames.findAll({ where: { userId: user.id } })
+    const bg = await LoggedGames.findAll({ where: { userId: user.id, status: 'beat' } })
     .catch((err) => {
         console.log(err);
     });
@@ -140,7 +140,7 @@ async function getLeaderboardEntries() {
     const results = [];
 
     for (let i = 0; i < users.length; i++) {
-        const count = await BeatenGames.count({ where: { userId: users[i].id } });
+        const count = await LoggedGames.count({ where: { userId: users[i].id, status: 'beat' } });
 
         const res = await Users.findOne({ where: { id: users[i].id } })
         .catch((err) => {
@@ -156,7 +156,7 @@ async function getLeaderboardEntries() {
 }
 
 async function getRecentGameEntry(userId) {
-    const beatenGameEntry = await BeatenGames.findOne({ where: { userId: userId }, order: [ [ 'createdAt', 'DESC' ]] })
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: 'beat' }, order: [ [ 'createdAt', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -174,7 +174,7 @@ async function getRecentGameEntry(userId) {
 }
 
 async function getGames(id) {
-    const beatenGameEntry = await BeatenGames.findAll({ where: { userId: id } })
+    const beatenGameEntry = await LoggedGames.findAll({ where: { userId: id, status: 'beat' } })
     .catch((err) => {
         console.log(err);
     });

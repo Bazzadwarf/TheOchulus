@@ -9,15 +9,15 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 
 const Users = require('./models/users.js')(sequelize, Sequelize.DataTypes);
 const Games = require('./models/games.js')(sequelize, Sequelize.DataTypes);
-const BeatenGames = require('./models/beatenGames.js')(sequelize, Sequelize.DataTypes);
+const LoggedGames = require('./models/beatenGames.js')(sequelize, Sequelize.DataTypes);
 
 // Create userId foreignKey
-Users.hasMany(BeatenGames);
-BeatenGames.belongsTo(Users);
+Users.hasMany(LoggedGames);
+LoggedGames.belongsTo(Users);
 
 // Create gameId foreignKey
-Games.hasMany(BeatenGames);
-BeatenGames.belongsTo(Games);
+Games.hasMany(LoggedGames);
+LoggedGames.belongsTo(Games);
 
 Reflect.defineProperty(Users.prototype, 'addUser', {
     value: async function addUser(userData) {
@@ -44,4 +44,4 @@ sequelize.sync({ alter: true })
     console.log(err);
 });
 
-module.exports = { sequelize, Users, Games, BeatenGames };
+module.exports = { sequelize, Users, Games, LoggedGames };
