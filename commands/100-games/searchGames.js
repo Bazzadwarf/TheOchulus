@@ -22,7 +22,7 @@ module.exports = {
         let description = '';
 
         for (const game of games) {
-            if (game.first_release_date && (game.category == 0 || game.category == 4)) {
+            if (game.first_release_date && (game.category == 0 || game.category == 4 || game.category == 8 || game.category == 9)) {
                 const release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(game.first_release_date * 1000);
                 description = description.concat(`- **${game.name}** (*${release_date}*) - ID: ${game.id} \n`);
             }
@@ -50,7 +50,7 @@ async function searchGamesWithMinimumReview(gamename) {
 
 async function searchGamesWithoutMinimumReview(gamename) {
     let body = `search "${gamename}"; `;
-    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4) & version_parent = null;');
+    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4  | category = 8 | category = 9) & version_parent = null;');
 
     const games = await getGameJson(body);
 
