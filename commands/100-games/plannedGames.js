@@ -36,7 +36,7 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
         .setAuthor({ name: `${user.displayName}`, iconURL: user.avatarURL() })
-        .setTitle(`${user.displayName}'s planned games to play`)
+        .setTitle(`${user.displayName}'s planned games`)
         .setDescription(desc)
         .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
         .setTimestamp();

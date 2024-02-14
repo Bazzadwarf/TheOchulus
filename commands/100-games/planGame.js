@@ -43,16 +43,19 @@ module.exports = {
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
         const planNum = await getPlanningGameCount(userDatabaseEntry);
         const playNum = await getPlayingGameCount(userDatabaseEntry);
-        const coverUrl = await getCoverURL(game.cover);
 
         const embed = new EmbedBuilder()
             .setColor(0x43ABEC)
             .setAuthor({ name: `${interaction.user.displayName} is planning to beat a game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name}!`)
-            .setThumbnail(`${coverUrl}`)
             .setDescription(`${interaction.user.displayName} has ${planNum} games planned, they are playing ${playNum} games, they have beaten ${beatNum} games, they have ${100 - beatNum} games remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
+
+        if (game.cover) {
+            const coverUrl = await getCoverURL(game.cover);
+            embed.setThumbnail(`${coverUrl}`);
+        }
 
         await interaction.followUp({ embeds: [embed] });
     },

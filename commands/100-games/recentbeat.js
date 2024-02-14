@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../igdbHelperFunctions.js');
-const { getUserRegistration, getRecentBeatenGameEntry, getBeatenGameCount } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getRecentBeatenGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,17 +26,22 @@ module.exports = {
         if (!res) return interaction.reply({ content: 'No game found.', ephemeral: true });
         const game = res[0];
 
-        const coverUrl = await getCoverURL(game.cover);
-        const num = await getBeatenGameCount(userDatabaseEntry);
+        const beatNum = await getBeatenGameCount(userDatabaseEntry);
+        const planNum = await getPlanningGameCount(userDatabaseEntry);
+        const playNum = await getPlayingGameCount(userDatabaseEntry);
 
         const embed = new EmbedBuilder()
             .setColor(0xFFD700)
             .setAuthor({ name: `${user.displayName}'s most recent beat game!`, iconURL: user.avatarURL() })
             .setTitle(game.name)
-            .setThumbnail(`${coverUrl}`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp()
-            .setDescription(`${interaction.user.displayName} has beaten ${num} games, they have ${100 - num} games remaining.`);
+            .setDescription(`${interaction.user.displayName} has ${planNum} games planned, they are playing ${playNum} games, they have beaten ${beatNum} games, they have ${100 - beatNum} games remaining.`);
+
+        if (game.cover) {
+            const coverUrl = await getCoverURL(game.cover);
+            embed.setThumbnail(`${coverUrl}`);
+        }
 
         return interaction.reply({ embeds: [embed] });
     },
