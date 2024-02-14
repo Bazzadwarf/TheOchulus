@@ -34,7 +34,9 @@ module.exports = {
 
         body = body.concat('fields *;');
 
-        const res = await getGameJson(body);
+        let res = await getGameJson(body);
+        res = res.filter(entry => entry.status !== 6);
+        res.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
         if (!res[0]) return interaction.followUp({ content: 'No game found for the options supplied.', ephemeral: true });
 
