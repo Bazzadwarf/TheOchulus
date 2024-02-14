@@ -21,16 +21,17 @@ module.exports = {
         if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
         const databaseEntries = await getPlayingGames(userDatabaseEntry.id);
-        if (!databaseEntries || databaseEntries.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
-
         let desc = '';
 
-        for (let i = 0; i < databaseEntries.length; i++) {
-            const gameid = await checkGameStorageId(databaseEntries[i].gameId);
-            const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
-            const game = res[0];
-
-            desc = desc.concat('-\t', game.name, '\n');
+        if (!databaseEntries || databaseEntries.length == 0) {
+            desc = `${user.displayName} is currently playing no games.`;
+        } else {
+            for (let i = 0; i < databaseEntries.length; i++) {
+                const gameid = await checkGameStorageId(databaseEntries[i].gameId);
+                const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
+                const game = res[0];
+                desc = desc.concat('#', (i + 1), ' \t', game.name, '\n');
+            }
         }
 
         const embed = new EmbedBuilder()
