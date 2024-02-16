@@ -35,6 +35,17 @@ async function getUserRegistration(user) {
     return null;
 }
 
+async function getUserFromId(id) {
+    const u = await Users.findOne({ where: { id: id } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (u) return u;
+
+    return null;
+}
+
 async function checkGameStorage(game) {
     let g = await Games.findOne({ where: { igdb_id: game.id, name: game.name } })
     .catch((err) => {
@@ -292,6 +303,17 @@ async function getGames(id, status) {
     return false;
 }
 
+async function getAllBeatenGames() {
+    const gameEntries = await LoggedGames.findAll({ where: { status: 'beat' }, order: [ [ 'updatedAt', 'ASC' ]] })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (gameEntries) return gameEntries;
+
+    return false;
+}
+
 async function backupDatabase() {
     const date = new Date().toJSON().slice(0, 10);
 
@@ -306,6 +328,7 @@ async function backupDatabase() {
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
+    getUserFromId,
     checkGameStorage,
     createPlanningGameEntry,
     createPlayingGameEntry,
@@ -331,5 +354,6 @@ module.exports = {
     getPlayingGames,
     getBeatenGames,
     getGames,
+    getAllBeatenGames,
     backupDatabase,
 };
