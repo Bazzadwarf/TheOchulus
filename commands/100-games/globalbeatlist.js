@@ -18,9 +18,7 @@ module.exports = {
             desc = 'No games beaten yet.';
         } else {
             for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
-                const gameid = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
-                const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
-                const game = res[0];
+                const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
                 const userentry = await getUserFromId(beatenGamesDatabaseEntries[i].userId);
                 const date = beatenGamesDatabaseEntries[i].updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
                 desc = desc.concat('**', date, '**: \t', game.name, ' \t*(', userentry.username, ')*\n');
