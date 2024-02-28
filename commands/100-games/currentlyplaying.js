@@ -26,18 +26,20 @@ module.exports = {
         if (!databaseEntries || databaseEntries.length == 0) {
             desc = `${user.displayName} is currently playing no games.`;
         } else {
+            desc = desc.concat('__Total: ', databaseEntries.length, '__\n\n');
+
             for (let i = 0; i < databaseEntries.length; i++) {
                 const gameid = await checkGameStorageId(databaseEntries[i].gameId);
                 const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
                 const game = res[0];
-                desc = desc.concat('#', (i + 1), ' \t', game.name, '\n');
+                desc = desc.concat('**#', (i + 1), '** ', game.name, '\n');
             }
         }
 
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
-        .setAuthor({ name: `${user.displayName}`, iconURL: user.avatarURL() })
-        .setTitle(`${user.displayName}'s currently playing games`)
+        .setThumbnail(user.avatarURL())
+        .setTitle(`${user.displayName}'s Currently Playing Games`)
         .setDescription(desc)
         .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
         .setTimestamp();
