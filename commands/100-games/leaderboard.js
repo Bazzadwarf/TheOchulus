@@ -17,11 +17,15 @@ module.exports = {
         for (let i = 0; i < leaderboard.length; i++) {
 
             if (leaderboard[i].count > 0) {
-                let newLine = String.prototype.concat('#', (i + 1), ' \t', leaderboard[i].username, ' - ', leaderboard[i].count, ' games');
+                let newLine = String.prototype.concat(leaderboard[i].username, ' - ', leaderboard[i].count, ' games');
+
+                const number = String.prototype.concat('**#', (i + 1), '** ');
 
                 if (i == 0) newLine = String.prototype.concat('**', newLine, '**');
 
                 if (leaderboard[i].username == interaction.user.username) newLine = String.prototype.concat('*', newLine, '*');
+
+                newLine = String.prototype.concat(number, newLine);
 
                 newLine = String.prototype.concat('\n', newLine);
 
