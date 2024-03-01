@@ -35,13 +35,16 @@ module.exports = {
             .setAuthor({ name: `${user.displayName}'s most recent beat game!`, iconURL: user.avatarURL() })
             .setTitle(game.name)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
-            .setTimestamp()
-            .setDescription(`${interaction.user.displayName} has ${planNum} games planned, they are playing ${playNum} games, they have beaten ${beatNum} games, they have ${100 - beatNum} games remaining.`);
+            .setTimestamp();
 
         if (game.cover) {
             const coverUrl = await getCoverURL(game.cover);
             embed.setThumbnail(`${coverUrl}`);
         }
+
+        embed.addFields({ name: 'Planned', value: `${planNum} games`, inline: true });
+        embed.addFields({ name: 'Now Playing', value: `${playNum} games`, inline: true });
+        embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} games remaining)`, inline: true });
 
         return interaction.reply({ embeds: [embed] });
     },
