@@ -26,13 +26,14 @@ module.exports = {
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
             desc = `${user.displayName} has not beaten any games yet.`;
         } else {
-            desc = desc.concat('__Total: ', beatenGamesDatabaseEntries.length, '/100__\n\n');
+            desc = desc.concat('__Total: ', beatenGamesDatabaseEntries.length, '/100__\n');
 
             for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
                 const gameid = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
                 const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
                 const game = res[0];
-                desc = desc.concat('**#', (i + 1), '** ', game.name, '\n');
+                const date = beatenGamesDatabaseEntries[i].updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+                desc = desc.concat('**#', (i + 1), ' (', date, ')**: ', game.name, '\n');
             }
         }
 

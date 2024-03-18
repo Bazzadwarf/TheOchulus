@@ -26,7 +26,7 @@ module.exports = {
         if (!databaseEntries || databaseEntries.length == 0) {
             desc = `${user.displayName} currently has no planned games.`;
         } else {
-            desc = desc.concat('__Total: ', databaseEntries.length, '__\n\n');
+            desc = desc.concat('__Total: ', databaseEntries.length, '__\n');
 
             for (let i = 0; i < databaseEntries.length; i++) {
                 const gameid = await checkGameStorageId(databaseEntries[i].gameId);

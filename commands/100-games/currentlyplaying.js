@@ -26,13 +26,14 @@ module.exports = {
         if (!databaseEntries || databaseEntries.length == 0) {
             desc = `${user.displayName} is currently playing no games.`;
         } else {
-            desc = desc.concat('__Total: ', databaseEntries.length, '__\n\n');
+            desc = desc.concat('__Total: ', databaseEntries.length, '__\n');
 
             for (let i = 0; i < databaseEntries.length; i++) {
                 const gameid = await checkGameStorageId(databaseEntries[i].gameId);
                 const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
                 const game = res[0];
-                desc = desc.concat('**#', (i + 1), '** ', game.name, '\n');
+                const date = databaseEntries[i].updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+                desc = desc.concat('**#', (i + 1), ' (', date, ')**: ', game.name, '\n');
             }
         }
 
