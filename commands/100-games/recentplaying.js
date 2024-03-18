@@ -42,9 +42,9 @@ module.exports = {
             embed.setThumbnail(`${coverUrl}`);
         }
 
-        embed.addFields({ name: 'Planned', value: `${planNum} games`, inline: true });
-        embed.addFields({ name: 'Now Playing', value: `${playNum} games`, inline: true });
-        embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} games remaining)`, inline: true });
+        embed.addFields({ name: 'Planned', value: `${planNum} game(s)`, inline: true });
+        embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
+        embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} game(s) remaining)`, inline: true });
 
         return interaction.reply({ embeds: [embed] });
     },

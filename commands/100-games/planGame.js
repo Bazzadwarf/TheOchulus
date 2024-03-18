@@ -53,9 +53,9 @@ module.exports = {
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
-        embed.addFields({ name: 'Planned', value: `${planNum} games`, inline: true });
-        embed.addFields({ name: 'Now Playing', value: `${playNum} games`, inline: true });
-        embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} games remaining)`, inline: true });
+        embed.addFields({ name: 'Planned', value: `${planNum} game(s)`, inline: true });
+        embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
+        embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} game(s) remaining)`, inline: true });
 
         if (game.cover) {
             const coverUrl = await getCoverURL(game.cover);

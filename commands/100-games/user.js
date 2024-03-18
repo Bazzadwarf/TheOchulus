@@ -31,9 +31,9 @@ module.exports = {
         embed.setTitle(`User Info for ${user.displayName}`);
         embed.setThumbnail(user.avatarURL());
 
-        if (planNum >= 0) embed.addFields({ name: 'Planned', value: `${planNum} games`, inline: true });
-        if (playNum >= 0) embed.addFields({ name: 'Now Playing', value: `${playNum} games`, inline: true });
-        if (beatNum >= 0) embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} games remaining)`, inline: true });
+        if (planNum >= 0) embed.addFields({ name: 'Planned', value: `${planNum} game(s)`, inline: true });
+        if (playNum >= 0) embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
+        if (beatNum >= 0) embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} game(s) remaining)`, inline: true });
         if (gameDatabaseEntry) embed.addFields({ name: 'Last Beat Game', value: `${gameDatabaseEntry.name}`, inline: true });
 
         if (beatenGamesDatabaseEntries && beatenGamesDatabaseEntries.length > 0) {
