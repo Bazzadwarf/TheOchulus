@@ -30,6 +30,7 @@ module.exports = {
         embed.setColor(0x6441a5);
         embed.setTitle(`User Info for ${user.displayName}`);
         embed.setThumbnail(user.avatarURL());
+        embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
 
         if (planNum >= 0) embed.addFields({ name: 'Planned', value: `${planNum} game(s)`, inline: true });
         if (playNum >= 0) embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
