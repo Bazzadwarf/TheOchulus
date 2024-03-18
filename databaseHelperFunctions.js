@@ -280,6 +280,17 @@ async function getRecentGameEntry(userId, status) {
     return false;
 }
 
+async function getRecentEntry(userId) {
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId }, order: [ [ 'updatedAt', 'DESC' ]] })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (!beatenGameEntry) return false;
+
+    return beatenGameEntry;
+}
+
 async function getPlanningGames(id) {
     return await getGames(id, 'planning');
 }
@@ -350,6 +361,7 @@ module.exports = {
     getRecentPlayingGameEntry,
     getRecentBeatenGameEntry,
     getRecentGameEntry,
+    getRecentEntry,
     getPlanningGames,
     getPlayingGames,
     getBeatenGames,
