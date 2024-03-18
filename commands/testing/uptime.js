@@ -43,7 +43,6 @@ module.exports = {
         const currentDate = `${currentYear}/${currentMonth}/${currentDay} ${currentHour}:${currentMinute}:${currentSecond}`;
 
         const embed = new EmbedBuilder()
-        
         .setColor(0xD36918)
         .setTitle('Current Uptime')
         .setThumbnail(interaction.client.user.avatarURL())
