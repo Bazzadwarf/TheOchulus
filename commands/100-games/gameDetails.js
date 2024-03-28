@@ -54,8 +54,14 @@ module.exports = {
         embed.setColor(0x6441a5);
         embed.setTitle(`${game.name}`);
         embed.setURL(`${game.url}`);
-        embed.setThumbnail(`${coverUrl}`);
-        embed.addFields({ name: 'Description', value: `${game.summary}` });
+
+        if (game.cover) {
+            embed.setThumbnail(`${coverUrl}`);
+        }
+
+        if (game.summary) {
+            embed.addFields({ name: 'Description', value: `${game.summary.length > 1024 ? game.summary.substring(0, 1024) : game.summary}` });
+        }
 
         if (game.involved_companies) {
             const companies = [];
