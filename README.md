@@ -53,7 +53,15 @@ Show a list of games the user has beaten.
 - *Optional*
     - `user` - The username of a user to check.
 
-## /deletegame
+## /currentlyplaying
+
+Show the list of games the user are currently playing.
+
+**Parametes:**
+- *Optional*
+    - `user` - The username of a user to check.
+
+## /deletebeatengame
 
 Deletes a game from the users beaten games.
 
@@ -63,6 +71,30 @@ Deletes a game from the users beaten games.
 
 - *Optional*
     - `beatgamenumber` - The number of the beat game entry to delete.
+
+## /deleteplannedgame
+
+Deletes a game from the users planned games.
+
+**Parametes:**
+- *Optional*
+    - `currentgamenumber` - The number of the current game entry to delete.
+
+## /deleteplayinggame
+
+Deletes a game from the users currently playing games.
+
+**Parametes:**
+- *Optional*
+    - `currentgamenumber` - The number of the current game entry to delete.
+
+## /estimatedfinishdate
+
+Get an estimated date as to when a user will finish the 100 games challenge.
+
+**Parametes:**
+- *Optional*
+    - `user` - The username of a user to check.
 
 ## /gamedetails
 
@@ -76,6 +108,10 @@ Get the details of a game from the IGDB database.
     - `gamename` - The name of the game.
     - `gameid` - The IGDB game ID.
 
+## /globalbeatlist
+
+Show a list of all games beaten for the 100 games challenge in chronological order.
+
 ## /info
 
 Get info on the bot.
@@ -84,13 +120,70 @@ Get info on the bot.
 
 Shows the leaderboard for the 100 Game Challenge.
 
+## /plangame
+
+Log a planned game into a list of planned games.
+
+**Parameters:**
+
+*Note: One parameter is required.*
+
+- **Required**
+    - `gamename` - The name of the game.
+    - `gameid` - The IGDB game ID.
+
+## /plannedgames
+
+Show a list of games the user has planned.
+
+**Parameters:**
+
+- *Optional*
+    - `user` - The username of a user to check.
+
 ## /och
 
 Responds "*och*".
 
+## /randomgame
+
+Get a random game from the IGDB database.
+
+**Parameters:**
+
+- *Optional*
+    - `madness` - Remove restrictions on the games the bot can search for.
+
+## /randomplannedgame
+
+Get a random planned game from the list of a users planned games.
+
+**Parameters:**
+
+- *Optional*
+    - `user` - The username of a user to check.
+
 ## /recentbeat
 
 Get the most recent game a given user has beaten.
+
+**Parameters:**
+
+- *Optional*
+    - `user` - The username of a user to check.
+
+## /recentplanned
+
+Get the most recent game a given user has planned.
+
+**Parameters:**
+
+- *Optional*
+    - `user` - The username of a user to check.
+
+## /recentplaying
+
+Get the most recent game a given user has started playing.
 
 **Parameters:**
 
@@ -109,3 +202,24 @@ Searches the IGDB database for a list of matching games.
 
 - **Required**
     - `gamename` - The name of the game.
+
+## /startplaying
+
+Log a game into a list of currently playing games.
+
+**Parameters:**
+
+*Note: One parameter is required.*
+
+- **Required**
+    - `gamename` - The name of the game.
+    - `gameid` - The IGDB game ID.
+
+## /user
+
+Get the users info for the 100 Game Challenge
+
+**Parameters:**
+
+- *Optional*
+    - `user` - The username of a user to check.
