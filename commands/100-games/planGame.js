@@ -10,15 +10,15 @@ module.exports = {
         .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0)),
     async execute(interaction) {
 
-        await interaction.reply({ content: 'Attempting to log game.', ephemeral: true });
+        await interaction.deferReply();
 
         const userDatabaseEntry = await getUserRegistration(interaction.user);
-        if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
+        if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
 
-        if (!gamename && !gameid) return interaction.followUp({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
+        if (!gamename && !gameid) return interaction.editReply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
 
         let body = '';
 
@@ -35,12 +35,12 @@ module.exports = {
         res = res.filter(entry => entry.status !== 6);
         res.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
-        if (!res[0]) return interaction.followUp({ content: 'No game found for the options supplied.', ephemeral: true });
+        if (!res[0]) return interaction.editReply({ content: 'No game found for the options supplied.', ephemeral: true });
 
         const game = res[0];
         const gameDatabaseEntry = await checkGameStorage(game);
 
-        if (!(await createPlanningGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.followUp({ content: `${game.name} already planned.`, ephemeral: true });
+        if (!(await createPlanningGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.editReply({ content: `${game.name} already planned.`, ephemeral: true });
 
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
         const planNum = await getPlanningGameCount(userDatabaseEntry);
@@ -62,6 +62,6 @@ module.exports = {
             embed.setThumbnail(`${coverUrl}`);
         }
 
-        await interaction.followUp({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
     },
 };

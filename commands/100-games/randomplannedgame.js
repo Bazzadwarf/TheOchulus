@@ -8,7 +8,7 @@ module.exports = {
     .setDescription('Get a random planned game')
     .addUserOption(option => option.setName('user').setDescription('The user to check')),
     async execute(interaction) {
-        await interaction.reply({ content: 'Searching for user...', ephemeral: true });
+        await interaction.deferReply();
 
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
@@ -18,7 +18,7 @@ module.exports = {
         }
 
         const userDatabaseEntry = await getUserRegistration(user);
-        if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
+        if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
@@ -36,7 +36,7 @@ module.exports = {
             const randomGame = await checkGameStorageId(randomEntry.gameId);
             const body = `where id = ${ randomGame.igdb_id }; fields *;`;
             const res = await getGameJson(body);
-            if (!res) return interaction.reply({ content: 'No game found.', ephemeral: true });
+            if (!res) return interaction.editReply({ content: 'No game found.', ephemeral: true });
             const game = res[0];
 
             embed.setTitle('THE OCHULUS HAS SPOKEN');
@@ -48,6 +48,6 @@ module.exports = {
         }
 
         embed.setDescription(desc);
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

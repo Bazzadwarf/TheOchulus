@@ -8,7 +8,7 @@ module.exports = {
         .setDescription('Delete a game that you was playing!')
         .addNumberOption(option => option.setName('currentgamenumber').setDescription('Index of the game to delete in the list of currently playing games.').setMinValue(1)),
     async execute(interaction) {
-        await interaction.reply({ content: 'Searching for user...', ephemeral: true });
+        await interaction.deferReply();
 
         const beatGameNumber = interaction.options.getNumber('currentgamenumber');
 
@@ -27,7 +27,7 @@ module.exports = {
             const gameDatabaseEntry = await checkGameStorageId(result.gameId);
             const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
             const res = await getGameJson(body);
-            if (!res) return interaction.followUp({ content: 'No game found.', ephemeral: true });
+            if (!res) return interaction.editReply({ content: 'No game found.', ephemeral: true });
             const game = res[0];
 
             const beatNum = await getBeatenGameCount(userDatabaseEntry);
@@ -47,9 +47,9 @@ module.exports = {
                 embed.setThumbnail(`${coverUrl}`);
             }
 
-            return interaction.followUp({ embeds: [embed] });
+            return interaction.editReply({ embeds: [embed] });
         }
 
-        return interaction.followUp({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
+        return interaction.editReply({ content: 'Unable to delete entry / No entry found.', ephemeral: true });
     },
 };

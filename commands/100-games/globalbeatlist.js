@@ -7,7 +7,7 @@ module.exports = {
     .setName('globalbeatlist')
     .setDescription('Show a list of all games beaten for the 100 games challenge in chronological order.'),
     async execute(interaction) {
-        await interaction.reply({ content: 'Searching for games...', ephemeral: true });
+        await interaction.deferReply();
 
         const user = interaction.user;
 
@@ -34,6 +34,6 @@ module.exports = {
         .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
         .setTimestamp();
 
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

@@ -8,7 +8,7 @@ module.exports = {
         .addBooleanOption(option => option.setName('madness').setDescription('Let The Ochulus off the rails at your own risk')),
         async execute(interaction) {
 
-        await interaction.reply('The Ochulus is pondering its options...');
+        await interaction.deferReply('The Ochulus is pondering its options...');
 
         let games = [];
         const count = interaction.options.getBoolean('madness') ? 0 : 27;
@@ -87,6 +87,6 @@ module.exports = {
         embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
         embed.setTimestamp();
 
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

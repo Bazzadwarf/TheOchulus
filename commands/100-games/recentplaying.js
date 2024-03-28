@@ -8,6 +8,8 @@ module.exports = {
         .setDescription('Get the most recent game you have started playing.')
         .addUserOption(option => option.setName('user').setDescription('The user to check')),
     async execute(interaction) {
+        await interaction.deferReply();
+
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
 
@@ -16,14 +18,14 @@ module.exports = {
         }
 
         const userDatabaseEntry = await getUserRegistration(user);
-        if (!userDatabaseEntry) return interaction.reply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
+        if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
         const gameDatabaseEntry = await getRecentPlayingGameEntry(userDatabaseEntry.id);
-        if (!gameDatabaseEntry) return interaction.reply({ content: 'No game found.', ephemeral: true });
+        if (!gameDatabaseEntry) return interaction.editReply({ content: 'No game found.', ephemeral: true });
 
         const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
         const res = await getGameJson(body);
-        if (!res) return interaction.reply({ content: 'No game found.', ephemeral: true });
+        if (!res) return interaction.editReply({ content: 'No game found.', ephemeral: true });
         const game = res[0];
 
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
@@ -46,6 +48,6 @@ module.exports = {
         embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
         embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} game(s) remaining)`, inline: true });
 
-        return interaction.reply({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

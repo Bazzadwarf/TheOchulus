@@ -7,7 +7,7 @@ module.exports = {
     .setDescription('Get the users info for the 100 Game Challenge')
     .addUserOption(option => option.setName('user').setDescription('The user to check')),
     async execute(interaction) {
-        await interaction.reply({ content: 'Searching for user...', ephemeral: true });
+        await interaction.deferReply();
 
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
@@ -17,7 +17,7 @@ module.exports = {
         }
 
         const userDatabaseEntry = await getUserRegistration(user);
-        if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
+        if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
         const planNum = await getPlanningGameCount(userDatabaseEntry);
         const playNum = await getPlayingGameCount(userDatabaseEntry);
@@ -50,6 +50,6 @@ module.exports = {
 
         if (recentEntry) embed.addFields({ name: 'Last Updated', value: `${recentEntry.updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}`, inline: true });
 
-        return interaction.followUp({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

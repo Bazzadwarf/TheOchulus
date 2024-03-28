@@ -9,19 +9,19 @@ module.exports = {
         .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0)),
 
         async execute(interaction) {
+        await interaction.deferReply();
+
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
 
-        if (!gamename && !gameid) return interaction.reply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
+        if (!gamename && !gameid) return interaction.editReply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
 
         let body = '';
 
         if (gameid) {
-            await interaction.reply(`Searching for ${gameid}...`);
             body = body.concat('where id = ', gameid, '; ');
             body = body.concat('fields *;');
         } else if (gamename) {
-            await interaction.reply(`Searching for ${gamename}...`);
             body = body.concat('search "', gamename, '"; ');
             body = body.concat('fields *; limit 25; where (category = 0 | category = 4) & version_parent = null;');
         }

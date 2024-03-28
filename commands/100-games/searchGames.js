@@ -9,13 +9,13 @@ module.exports = {
 
 	async execute(interaction) {
         const gamename = interaction.options.getString('gamename');
-        await interaction.reply({ content: `Searching for ${gamename}...`, ephemeral: true });
+        await interaction.deferReply();
 
         let games = await searchGamesWithMinimumReview(gamename);
 
         if (games.length == 0) games = await searchGamesWithoutMinimumReview(gamename);
 
-        if (games.length == 0) return interaction.followUp({ content: 'No games found.', ephemeral: true });
+        if (games.length == 0) return interaction.editReply({ content: 'No games found.', ephemeral: true });
 
         await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
@@ -35,7 +35,7 @@ module.exports = {
             .setDescription(`${description.slice(0, 1998)}`)
             .setColor(0x6441a5);
 
-        await interaction.followUp({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 	},
 };
 

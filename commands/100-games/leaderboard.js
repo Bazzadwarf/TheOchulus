@@ -8,8 +8,9 @@ module.exports = {
         .setDescription('Show the leaderboard!'),
     async execute(interaction) {
         const leaderboard = await getLeaderboardEntries();
+        await interaction.deferReply();
 
-        if (!leaderboard) return interaction.reply({ content: 'There was a problem!', ephemeral: true });
+        if (!leaderboard) return interaction.editReply({ content: 'There was a problem!', ephemeral: true });
 
         await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
         let desc = '';
@@ -41,6 +42,6 @@ module.exports = {
             .setTimestamp();
 
 
-        return interaction.reply({ embeds: [embed] });
+        return interaction.editReply({ embeds: [embed] });
     },
 };
