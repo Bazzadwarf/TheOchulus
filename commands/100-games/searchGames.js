@@ -14,12 +14,21 @@ module.exports = {
         let games = await searchGamesWithMinimumReview(gamename);
 
         if (games.length == 0) games = await searchGamesWithoutMinimumReview(gamename);
+        let description = '';
 
-        if (games.length == 0) return interaction.editReply({ content: 'No games found.', ephemeral: true });
+        if (games.length == 0) {
+            description = 'No games found.';
+
+            const embed = new EmbedBuilder()
+            .setTitle(`"${gamename}" Search Results`)
+            .setDescription(`${description.slice(0, 1998)}`)
+            .setColor(0x6441a5);
+
+            return await interaction.editReply({ embeds: [embed] });
+        }
 
         await games.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
-        let description = '';
 
         for (const game of games) {
             if (game.first_release_date && (game.category == 0 || game.category == 4 || game.category == 8 || game.category == 9)) {
