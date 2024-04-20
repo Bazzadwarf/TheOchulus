@@ -15,6 +15,17 @@ module.exports = {
         await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
         let desc = '';
 
+        let count = 0;
+
+        for (let i = 0; i < leaderboard.length; i++) {
+
+            if (leaderboard[i].count > 0) {
+                count += leaderboard[i].count;
+            }
+        }
+
+        desc = desc.concat('__Total: ', count, '__');
+
         for (let i = 0; i < leaderboard.length; i++) {
 
             if (leaderboard[i].count > 0) {
