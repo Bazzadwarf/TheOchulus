@@ -9,10 +9,10 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const user = interaction.user;
-
         const beatenGamesDatabaseEntries = await getAllBeatenGames();
         let desc = '';
+
+        desc = desc.concat('__Total: ', beatenGamesDatabaseEntries.length, '__\n');
 
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
             desc = 'No games beaten yet.';
@@ -27,9 +27,8 @@ module.exports = {
 
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
-        .setAuthor({ name: `${user.displayName}`, iconURL: user.avatarURL() })
         .setThumbnail(interaction.client.user.avatarURL())
-        .setTitle('Global Beat List')
+        .setTitle('The 100 Games Challenge Global Beat List')
         .setDescription(desc)
         .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
         .setTimestamp();
