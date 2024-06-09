@@ -46,7 +46,7 @@ module.exports = {
 
         const gameDatabaseEntry = await checkGameStorage(game);
 
-        if (!(await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry))) return interaction.editReply({ content: `${game.name} already beaten.`, ephemeral: true });
+        await createBeatenGameEntry(userDatabaseEntry, gameDatabaseEntry);
 
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
         const planNum = await getPlanningGameCount(userDatabaseEntry);
