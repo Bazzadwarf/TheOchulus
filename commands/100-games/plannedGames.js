@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getUserRegistration, getPlanningGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
-const { getGameJson } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -29,9 +28,7 @@ module.exports = {
             desc = desc.concat('__Total: ', databaseEntries.length, '__\n');
 
             for (let i = 0; i < databaseEntries.length; i++) {
-                const gameid = await checkGameStorageId(databaseEntries[i].gameId);
-                const res = await getGameJson(`where id = ${ gameid.igdb_id }; fields *;`);
-                const game = res[0];
+                const game = await checkGameStorageId(databaseEntries[i].gameId);
                 desc = desc.concat('**#', (i + 1), '** ', game.name, '\n');
             }
         }
