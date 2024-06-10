@@ -42,6 +42,7 @@ module.exports = {
             const start = new Date(2024, 0, 1);
             const days = (today - start) / (1000 * 60 * 60 * 24);
             const timepergame = days / beatenGamesDatabaseEntries.length;
+            embed.addFields({ name: 'Average Beat Interval', value: `${Math.round(timepergame)} days`, inline: true });
             const finishdate = new Date();
             finishdate.setDate(start.getDate() + (timepergame * 100));
             const date = finishdate.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
