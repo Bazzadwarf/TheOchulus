@@ -85,6 +85,8 @@ async function createPlanningGameEntry(user, game, date) {
 
     if (entry.status == 'planning') return false;
 
+    await createChangelogEntry(user, game, entry.status, 'planning');
+
     entry.status = 'planning';
 
     if (!date) {
@@ -105,6 +107,8 @@ async function createPlayingGameEntry(user, game, date) {
     if (!entry) return await createLoggedGameEntry(user, game, 'playing', date);
 
     if (entry.status == 'playing') return false;
+
+    await createChangelogEntry(user, game, entry.status, 'playing');
 
     entry.status = 'playing';
 
@@ -127,6 +131,8 @@ async function createBeatenGameEntry(user, game, date) {
 
     if (entry.status == 'beat') return false;
 
+    await createChangelogEntry(user, game, entry.status, 'beat');
+
     entry.status = 'beat';
 
     if (!date) {
@@ -139,6 +145,13 @@ async function createBeatenGameEntry(user, game, date) {
     await entry.save();
 
     return entry;
+}
+
+async function createChangelogEntry(user, game, oldStatus, newStatus) {
+    return await Changelog.create({ userId: user.id, gameId: game.id, newStatus: newStatus, oldStatus: oldStatus })
+    .catch((err) => {
+        console.log(err);
+    });
 }
 
 async function checkLoggedGameEntry(user, game) {
@@ -163,7 +176,14 @@ async function createLoggedGameEntry(user, game, status, date) {
         console.log(err);
     });
 
-    if (bg) return true;
+    if (bg) {
+        await Changelog.create({ userId: user.id, gameId: game.id, newStatus: status })
+        .catch((err) => {
+            console.log(err);
+        });
+
+        return true;
+    }
 
     return false;
 }
@@ -216,6 +236,13 @@ async function deleteLoggedGameId(id, user, status) {
     const entry = bg;
     await bg.destroy();
 
+    if (bg) {
+        await Changelog.create({ userId: user.id, gameId: entry.gameId, oldStatus: status })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
+
     return entry;
 }
 
@@ -243,6 +270,13 @@ async function deleteLoggedGameNum(num, user, status) {
 
     const entry = bg[num - 1];
     await bg[num - 1].destroy();
+
+    if (bg) {
+        await Changelog.create({ userId: user.id, gameId: entry.gameId, oldStatus: status })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
 
     return entry;
 }
