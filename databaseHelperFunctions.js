@@ -391,6 +391,17 @@ async function backupDatabase() {
     }
 }
 
+async function getChangelog(id) {
+    const changelogEntries = await Changelog.findAll({where: {userId: id}, order: [ [ 'updatedAt', 'DESC' ]] })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (changelogEntries) return changelogEntries;
+
+    return false;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -423,4 +434,5 @@ module.exports = {
     getGames,
     getAllBeatenGames,
     backupDatabase,
+    getChangelog,
 };
