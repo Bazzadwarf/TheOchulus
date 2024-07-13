@@ -402,6 +402,17 @@ async function getChangelog(id) {
     return false;
 }
 
+async function getAllChangelog() {
+    const changelogEntries = await Changelog.findAll({ order: [ [ 'updatedAt', 'DESC' ]] })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (changelogEntries) return changelogEntries;
+
+    return false;
+}
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -435,4 +446,5 @@ module.exports = {
     getAllBeatenGames,
     backupDatabase,
     getChangelog,
+    getAllChangelog,
 };
