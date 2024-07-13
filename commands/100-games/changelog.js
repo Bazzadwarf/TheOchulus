@@ -22,17 +22,17 @@ module.exports = {
         const changelogEntries = await getChangelog(userDatabaseEntry.id);
         let desc = '';
 
-        for (const entry of changelogEntries) {
-            const game = await checkGameStorageId(entry.gameId);
+        for (let i = 0; i < changelogEntries.length; i++) {
+            const game = await checkGameStorageId(changelogEntries[i].gameId);
 
-            if (entry.newStatus == 'planning') {
-                desc = desc.concat(`:pencil: planned **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
-            } else if (entry.newStatus == 'playing') {
-                desc = desc.concat(`:video_game: started playing **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
-            } else if (entry.newStatus == 'beat') {
-                desc = desc.concat(`:white_check_mark: beat **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
-            } else if (!entry.newStatus) {
-                desc = desc.concat(`:x: deleted **${game.name}** from **${entry.oldStatus}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            if (changelogEntries[i].newStatus == 'planning') {
+                desc = desc.concat(`:pencil: planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (changelogEntries[i].newStatus == 'playing') {
+                desc = desc.concat(`:video_game: started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (changelogEntries[i].newStatus == 'beat') {
+                desc = desc.concat(`:white_check_mark: beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (!changelogEntries[i].newStatus) {
+                desc = desc.concat(`:x: deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
             }
         }
 
