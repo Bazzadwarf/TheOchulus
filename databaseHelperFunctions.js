@@ -1,4 +1,4 @@
-const { Users, Games, LoggedGames } = require ('./dbObjects.js');
+const { Users, Games, LoggedGames, Changelog } = require ('./dbObjects.js');
 const fs = require('fs');
 
 async function checkUserRegistration(user) {
