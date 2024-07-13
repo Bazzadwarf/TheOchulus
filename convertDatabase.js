@@ -9,11 +9,10 @@ const { sequelize, LoggedGames } = require ('./dbObjects.js');
 
     await sequelize.getQueryInterface().addColumn(
         'BeatenGames',
-        'status',
+        'statusLastChanged',
         {
-            type: DataTypes.ENUM('planning', 'playing', 'beat'),
-            allowNull: false,
-            defaultValue: 'beat',
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     );
 

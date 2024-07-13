@@ -49,7 +49,7 @@ module.exports = {
             embed.addFields({ name: 'Estimated Finish Date', value: `${date}`, inline: true });
         }
 
-        if (recentEntry) embed.addFields({ name: 'Last Updated', value: `${recentEntry.updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}`, inline: true });
+        if (recentEntry) embed.addFields({ name: 'Last Updated', value: `${recentEntry.statusLastChanged.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}`, inline: true });
 
         return interaction.editReply({ embeds: [embed] });
     },

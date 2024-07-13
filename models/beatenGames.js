@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('planning', 'playing', 'beat'),
             allowNull: true,
         },
+        statusLastChanged: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     }, {
         timestamps: true,
     });

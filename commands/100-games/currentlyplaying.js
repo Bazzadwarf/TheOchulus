@@ -29,7 +29,7 @@ module.exports = {
 
             for (let i = 0; i < databaseEntries.length; i++) {
                 const game = await checkGameStorageId(databaseEntries[i].gameId);
-                const date = databaseEntries[i].updatedAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+                const date = databaseEntries[i].statusLastChanged.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
                 desc = desc.concat('**#', (i + 1), ' (', date, ')**: ', game.name, '\n');
             }
         }
