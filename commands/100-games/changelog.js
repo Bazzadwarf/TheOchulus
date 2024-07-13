@@ -25,14 +25,13 @@ module.exports = {
         for (const entry of changelogEntries) {
             const game = await checkGameStorageId(entry.gameId);
 
-            if (entry.oldStatus && entry.newStatus) {
-                // Status changed
-                desc = desc.concat(`:arrow_right: moved **${game.name}** from **${entry.oldStatus}** to **${entry.newStatus}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
-            } else if (!entry.oldStatus && entry.newStatus) {
-                // Created entry
-                desc = desc.concat(`:white_check_mark: added **${game.name}** to **${entry.newStatus}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
-            } else if (entry.oldStatus && !entry.newStatus) {
-                // Deleted Entry
+            if (entry.newStatus == 'planning') {
+                desc = desc.concat(`:pencil: planned **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (entry.newStatus == 'playing') {
+                desc = desc.concat(`:video_game: started playing **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (entry.newStatus == 'beat') {
+                desc = desc.concat(`:white_check_mark: beat **${game.name}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+            } else if (!entry.newStatus) {
                 desc = desc.concat(`:x: deleted **${game.name}** from **${entry.oldStatus}** *(${entry.createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
             }
         }
