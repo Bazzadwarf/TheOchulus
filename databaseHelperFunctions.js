@@ -78,7 +78,7 @@ async function checkGameStorageId(id) {
     return null;
 }
 
-async function createPlanningGameEntry(user, game) {
+async function createPlanningGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
     if (!entry) return await createLoggedGameEntry(user, game, 'planning');
@@ -87,12 +87,19 @@ async function createPlanningGameEntry(user, game) {
 
     entry.status = 'planning';
 
+    if (!date) {
+        entry.statusLastChanged = new Date();
+    }
+    else {
+        entry.statusLastChanged = date;
+    }
+
     await entry.save();
 
     return entry;
 }
 
-async function createPlayingGameEntry(user, game) {
+async function createPlayingGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
     if (!entry) return await createLoggedGameEntry(user, game, 'playing');
@@ -101,12 +108,19 @@ async function createPlayingGameEntry(user, game) {
 
     entry.status = 'playing';
 
+    if (!date) {
+        entry.statusLastChanged = new Date();
+    }
+    else {
+        entry.statusLastChanged = date;
+    }
+
     await entry.save();
 
     return entry;
 }
 
-async function createBeatenGameEntry(user, game) {
+async function createBeatenGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
     if (!entry) return await createLoggedGameEntry(user, game, 'beat');
@@ -114,6 +128,13 @@ async function createBeatenGameEntry(user, game) {
     if (entry.status == 'beat') return false;
 
     entry.status = 'beat';
+
+    if (!date) {
+        entry.statusLastChanged = new Date();
+    }
+    else {
+        entry.statusLastChanged = date;
+    }
 
     await entry.save();
 
@@ -134,7 +155,7 @@ async function checkLoggedGameEntry(user, game) {
 async function createLoggedGameEntry(user, game, status) {
     let bg;
 
-    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status })
+    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status, statusLastChanged: new Date() })
     .then((data) => {
         bg = data;
     })
