@@ -81,7 +81,7 @@ async function checkGameStorageId(id) {
 async function createPlanningGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
-    if (!entry) return await createLoggedGameEntry(user, game, 'planning');
+    if (!entry) return await createLoggedGameEntry(user, game, 'planning', date);
 
     if (entry.status == 'planning') return false;
 
@@ -102,7 +102,7 @@ async function createPlanningGameEntry(user, game, date) {
 async function createPlayingGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
-    if (!entry) return await createLoggedGameEntry(user, game, 'playing');
+    if (!entry) return await createLoggedGameEntry(user, game, 'playing', date);
 
     if (entry.status == 'playing') return false;
 
@@ -123,7 +123,7 @@ async function createPlayingGameEntry(user, game, date) {
 async function createBeatenGameEntry(user, game, date) {
     const entry = await checkLoggedGameEntry(user, game);
 
-    if (!entry) return await createLoggedGameEntry(user, game, 'beat');
+    if (!entry) return await createLoggedGameEntry(user, game, 'beat', date);
 
     if (entry.status == 'beat') return false;
 
@@ -152,10 +152,10 @@ async function checkLoggedGameEntry(user, game) {
     return bg;
 }
 
-async function createLoggedGameEntry(user, game, status) {
+async function createLoggedGameEntry(user, game, status, date) {
     let bg;
 
-    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status, statusLastChanged: new Date() })
+    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status, statusLastChanged: date })
     .then((data) => {
         bg = data;
     })

@@ -7,7 +7,8 @@ module.exports = {
         .setName('plangame')
         .setDescription('Log a game that you plan beat towards the 100 game challenge!')
         .addStringOption(option => option.setName('gamename').setDescription('The name of the game.').setRequired(true))
-        .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0)),
+        .addNumberOption(option => option.setName('gameid').setDescription('The IGDB game id.').setMinValue(0))
+        .addStringOption(option => option.setName('date').setDescription('The date to be logged. (YYYY/MM/DD)')),
     async execute(interaction) {
 
         await interaction.deferReply();
@@ -17,6 +18,7 @@ module.exports = {
 
         const gamename = interaction.options.getString('gamename');
         const gameid = interaction.options.getNumber('gameid');
+        const date = interaction.options.getString('date');
 
         if (!gamename && !gameid) return interaction.editReply({ content: 'No gamename or gameid supplied, please supply an option to register a game!', ephemeral: true });
 
@@ -40,7 +42,19 @@ module.exports = {
         const game = res[0];
         const gameDatabaseEntry = await checkGameStorage(game);
 
-        await createPlanningGameEntry(userDatabaseEntry, gameDatabaseEntry);
+        let gameDate = new Date();
+
+        if (date) {
+            const parsedDate = new Date(date);
+            if (!isNaN(parsedDate.getTime())) {
+                gameDate = parsedDate;
+            }
+            else {
+                gameDate = new Date();
+            }
+        }
+
+        await createPlanningGameEntry(userDatabaseEntry, gameDatabaseEntry, gameDate);
 
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
         const planNum = await getPlanningGameCount(userDatabaseEntry);
