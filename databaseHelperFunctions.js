@@ -284,7 +284,7 @@ async function getRecentBeatenGameEntry(userId) {
 }
 
 async function getRecentGameEntry(userId, status) {
-    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'updatedAt', 'DESC' ]] })
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId, status: status }, order: [ [ 'statusLastChanged', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -302,7 +302,7 @@ async function getRecentGameEntry(userId, status) {
 }
 
 async function getRecentEntry(userId) {
-    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId }, order: [ [ 'updatedAt', 'DESC' ]] })
+    const beatenGameEntry = await LoggedGames.findOne({ where: { userId: userId }, order: [ [ 'statusLastChanged', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -325,7 +325,7 @@ async function getBeatenGames(id) {
 }
 
 async function getGames(id, status) {
-    const gameEntries = await LoggedGames.findAll({ where: { userId: id, status: status }, order: [ [ 'updatedAt', 'ASC' ]] })
+    const gameEntries = await LoggedGames.findAll({ where: { userId: id, status: status }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -336,7 +336,7 @@ async function getGames(id, status) {
 }
 
 async function getAllBeatenGames() {
-    const gameEntries = await LoggedGames.findAll({ where: { status: 'beat' }, order: [ [ 'updatedAt', 'ASC' ]] })
+    const gameEntries = await LoggedGames.findAll({ where: { status: 'beat' }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
