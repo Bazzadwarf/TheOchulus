@@ -25,7 +25,7 @@ module.exports = {
                 newDesc = `:x: *${user.username}* deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
             }
 
-            if (newDesc.length + desc.length < 2000) {
+            if (newDesc.length + desc.length < 4096) {
                 desc = desc.concat(newDesc);
             }
             else {
