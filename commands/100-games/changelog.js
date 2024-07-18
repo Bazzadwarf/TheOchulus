@@ -23,16 +23,24 @@ module.exports = {
         let desc = '';
 
         for (let i = 0; i < changelogEntries.length; i++) {
+            let newDesc = '';
             const game = await checkGameStorageId(changelogEntries[i].gameId);
 
             if (changelogEntries[i].newStatus == 'planning') {
-                desc = desc.concat(`:pencil: planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+                newDesc = `:pencil: planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
             } else if (changelogEntries[i].newStatus == 'playing') {
-                desc = desc.concat(`:video_game: started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+                newDesc = `:video_game: started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
             } else if (changelogEntries[i].newStatus == 'beat') {
-                desc = desc.concat(`:white_check_mark: beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+                newDesc = `:white_check_mark: beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
             } else if (!changelogEntries[i].newStatus) {
-                desc = desc.concat(`:x: deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`);
+                newDesc = `:x: deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
+            }
+
+            if (newDesc.length + desc.length < 2000) {
+                desc = desc.concat(newDesc);
+            }
+            else {
+                i = changelogEntries.length;
             }
         }
 
