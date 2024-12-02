@@ -221,21 +221,22 @@ async function GetAverageGameAge() {
 		let month = today.getMonth() - averageGameAge.getMonth();
 		let day = today.getDate() - averageGameAge.getDate();
 
-		if (month < 0) {
-			year--;
-			month += 12;
-		}
+		while (month < 0 || day < 0) {
+			if (month < 0) {
+				year--;
+				month += 12;
+			}
 
-		if (day < 0) {
-			month--;
-			const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-			day += previousMonth.getDate();
+			if (day < 0) {
+				month--;
+				const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+				day += previousMonth.getDate();
+			}
 		}
-
 
 		return `${year} years, ${month} months, ${day} days old`;
 	}
-	return '';
+	return ' ';
 }
 
 async function GetFavouriteGenres() {
