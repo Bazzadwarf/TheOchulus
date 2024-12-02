@@ -264,7 +264,10 @@ async function GetFavouriteGenres() {
 			string = string.concat(` ${sortedCounts[genre][0]} (${sortedCounts[genre][1]} games),`);
 		}
 	}
-	string = string.slice(1, -1);
+
+	if (string.length > 1) {
+		string = string.slice(1, -1);
+	}
 
 	return string;
 }
@@ -301,7 +304,10 @@ async function GetFavouriteDevelopers() {
 			string = string.concat(` ${sortedCounts[developer][0]} (${sortedCounts[developer][1] } games),`);
 		}
 	}
-	string = string.slice(1, -1);
+
+	if (string.length > 1) {
+		string = string.slice(1, -1);
+	}
 
 	return string;
 }
@@ -339,7 +345,10 @@ async function GetFavouritePublishers() {
 			string = string.concat(` ${sortedCounts[publisher][0]} (${sortedCounts[publisher][1]} games),`);
 		}
 	}
-	string = string.slice(1, -1);
+
+	if (string.length > 1) {
+		string = string.slice(1, -1);
+	}
 
 	return string;
 }
