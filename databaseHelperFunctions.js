@@ -1,5 +1,6 @@
 const { Users, Games, LoggedGames, Changelog } = require ('./dbObjects.js');
 const fs = require('fs');
+const { Op } = require('sequelize');
 
 async function checkUserRegistration(user) {
 
@@ -305,6 +306,33 @@ async function getLeaderboardEntries() {
     return results;
 }
 
+async function getLeaderboardEntriesBetweenDates(start, end) {
+    const users = await Users.findAll()
+    .catch((err) => {
+        console.log(err);
+    });
+
+    const results = [];
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    for (let i = 0; i < users.length; i++) {
+        const count = await LoggedGames.count({ where: { userId: users[i].id, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } } });
+
+        const res = await Users.findOne({ where: { id: users[i].id } })
+        .catch((err) => {
+            console.log(err);
+        });
+        const username = res.username;
+
+        const fun = { username, count };
+        results.push(fun);
+    }
+
+    return results;
+}
+
 async function getRecentPlanningGameEntry(userId) {
     return await getRecentGameEntry(userId, 'planning');
 }
@@ -392,7 +420,7 @@ async function backupDatabase() {
 }
 
 async function getChangelog(id) {
-    const changelogEntries = await Changelog.findAll({where: {userId: id}, order: [ [ 'updatedAt', 'DESC' ]] })
+    const changelogEntries = await Changelog.findAll({ where: { userId: id }, order: [ [ 'updatedAt', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -447,4 +475,5 @@ module.exports = {
     backupDatabase,
     getChangelog,
     getAllChangelog,
+    getLeaderboardEntriesBetweenDates,
 };
