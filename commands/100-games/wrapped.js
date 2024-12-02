@@ -106,14 +106,23 @@ async function GetIGDBEntries(array) {
 
 async function GetDevelopers() {
 	companies = [];
+	const companyIds = new Set();
 
 	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
 		for (let j = 0; j < beatGameIGDBEntries[i].involved_companies.length; j++) {
+			companyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
+		}
+	}
 
-			if (!companies.find(item => item.id === beatGameIGDBEntries[i].involved_companies[j])) {
-				const company = await getCompanyInfo(beatGameIGDBEntries[i].involved_companies[j]);
-				companies.push(company);
-			}
+	const ids = [...companyIds];
+	const tempIds = [];
+
+	for (let i = 0; i < ids.length; i++) {
+		const company = await getCompanyInfo(ids[i]);
+
+		if (!tempIds.includes(company.id)) {
+			tempIds.push(company.id);
+			companies.push(company);
 		}
 	}
 }
@@ -255,12 +264,14 @@ async function GetFavouriteGenres() {
 async function GetFavouriteDevelopers() {
 	const developers = [];
 	const counts = [];
-	for (let i = 0; i < beatGameIGDBEntries.length && i < 5; i++) {
-		for (let j = 0; j < companies.length; j++) {
-			if (companies[j].developed) {
-				const developedGames = companies[j].developed;
-				if (developedGames.find(item => item === beatGameIGDBEntries[i].id)) {
-					developers.push(companies[j].name);
+
+	for (let i = 0; i < companies.length; i++) {
+		if (companies[i].developed) {
+			const developedGames = companies[i].developed;
+			for (let j = 0; j < beatGameIGDBEntries.length; j++) {
+				const found = developedGames.find(item => item === beatGameIGDBEntries[j].id);
+				if (found) {
+					developers.push(companies[i].name);
 				}
 			}
 		}
@@ -275,7 +286,7 @@ async function GetFavouriteDevelopers() {
 	const keys = Object.keys(sortedCounts);
 
 	let string = ' ';
-	for (let i = 0; i < keys.length; i++) {
+	for (let i = 0; i < keys.length && i < 5; i++) {
 		const developer = keys[i];
 
 		if (sortedCounts[developer][1] > 1) {
@@ -290,12 +301,15 @@ async function GetFavouriteDevelopers() {
 async function GetFavouritePublishers() {
 	const publishers = [];
 	const counts = [];
-	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
-		for (let j = 0; j < companies.length; j++) {
-			if (companies[j].published)	{
-				const developedGames = companies[j].published;
-				if (developedGames.find(item => item === beatGameIGDBEntries[i].id)) {
-					publishers.push(companies[j].name);
+
+	for (let i = 0; i < companies.length; i++) {
+		if (companies[i].published) {
+			const developedGames = companies[i].published;
+			for (let j = 0; j < beatGameIGDBEntries.length; j++) {
+				const found = developedGames.includes(beatGameIGDBEntries[j].id);
+
+				if (found) {
+					publishers.push(companies[i].name);
 				}
 			}
 		}
