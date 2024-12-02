@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUserRegistration, getBeatenGames, checkGameStorageId, getChangelog, getLeaderboardEntriesBetweenDates, getLeaderboardEntries } = require('../../databaseHelperFunctions');
+const { getUserRegistration, getBeatenGames, checkGameStorageId, getChangelog, getLeaderboardEntriesBetweenDates, getLeaderboardEntries, getBeatenGamesForYear } = require('../../databaseHelperFunctions');
 const { getGameJson, getGenres, getCompanyInfo } = require('../../igdbHelperFunctions');
 
 let userBeatenGamesDatabaseEntries = {};
@@ -36,7 +36,7 @@ module.exports = {
 
 		const numberOfGamesBeat = await GetNumberOfGamesBeat();
 		const averageBeatGameInterval = await GetAverageBeatInterval();
-		const mostActiveMonth = await GetMostActiveMonth();
+		const mostActiveMonth = await GetMostActiveMonth(userDatabaseEntry);
 		const oldestGameBeat = await GetOldestGameBeat();
 		const newestGameBeat = await GetNewestGameBeat();
 		const averageGameAge = await GetAverageGameAge();
@@ -147,18 +147,26 @@ async function GetAverageBeatInterval() {
 	return 0;
 }
 
-async function GetMostActiveMonth() {
+async function GetMostActiveMonth(userDatabaseEntry) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
-		let mostActiveMonth = [];
 
-		for (let i = 0; i < 12; i++) {
-			const month = FilterByMonth(userBeatenGamesDatabaseEntries, i);
-			if (month.length > mostActiveMonth.length) {
-				mostActiveMonth = month;
-			}
-		}
+		const results = [];
+		results.push(['January', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-01-01', '2024-02-01')]);
+		results.push(['February', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-02-01', '2024-03-01')]);
+		results.push(['March', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-03-01', '2024-04-01')]);
+		results.push(['April', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-04-01', '2024-05-01')]);
+		results.push(['May', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-05-01', '2024-06-01')]);
+		results.push(['June', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-06-01', '2024-07-01')]);
+		results.push(['July', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-07-01', '2024-08-01')]);
+		results.push(['August', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-08-01', '2024-09-01')]);
+		results.push(['September', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-09-01', '2024-10-01')]);
+		results.push(['October', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-10-01', '2024-11-01')]);
+		results.push(['November', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-11-01', '2024-12-01')]);
+		results.push(['December', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-12-01', '2025-01-01')]);
 
-		return String.prototype.concat(mostActiveMonth[0].updatedAt.toLocaleDateString('en-GB', { month: 'long' }), ' (', mostActiveMonth.length.toString(), ' games)');
+		const sorted = Object.entries(results).sort((a, b) => b[1][1] - a[1][1]);
+
+		return sorted[0][1][0] + ' (' + sorted[0][1][1].toString() + ' games)';
 	}
 
 	return '';
@@ -349,12 +357,14 @@ async function GetNumberOfDroppedGames(userDatabaseEntry) {
 
 async function GetYearLeaderboardPosition(userDatabaseEntry) {
 	const leaderboard = await getLeaderboardEntriesBetweenDates('2024-01-01', '2024-12-31');
+	await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 	const index = leaderboard.findIndex(item => item.username === userDatabaseEntry.username) + 1;
 	return await appendOrdinalSuffix(index);
 }
 
 async function GetLeaderboardPosition(userDatabaseEntry) {
 	const leaderboard = await getLeaderboardEntries();
+	await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 	const index = leaderboard.findIndex(item => item.username === userDatabaseEntry.username) + 1;
 	return await appendOrdinalSuffix(index);
 }

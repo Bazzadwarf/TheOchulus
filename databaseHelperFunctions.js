@@ -408,6 +408,18 @@ async function getAllBeatenGames() {
     return false;
 }
 
+async function getBeatenGamesForYear(userId, start, end) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const count = await LoggedGames.count({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    return count;
+}
+
 async function backupDatabase() {
     const date = new Date().toJSON().slice(0, 10);
 
@@ -476,4 +488,5 @@ module.exports = {
     getChangelog,
     getAllChangelog,
     getLeaderboardEntriesBetweenDates,
+    getBeatenGamesForYear,
 };
