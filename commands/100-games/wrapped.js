@@ -53,6 +53,7 @@ module.exports = {
 		embed.setDescription(`Here are the stats for the games you played for the 100 Games Challenge in 2024 ${user.displayName}`);
         embed.setThumbnail(user.avatarURL());
 		embed.setTimestamp();
+		embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
 
 		embed.addFields({ name: 'Number of Games Beat', value: numberOfGamesBeat.toString(), inline: true });
 		embed.addFields({ name: 'Average Beat Interval', value: `${Math.round(averageBeatGameInterval).toString()} days`, inline: true });
@@ -234,14 +235,16 @@ async function GetFavouriteGenres() {
 		counts[item] = (counts[item] || 0) + 1;
 	});
 
-	const keys = Object.keys(counts);
+	const sortedCounts = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-	let string = '';
-	for (let i = 0; i < keys.length && i < 3; i++) {
+	const keys = Object.keys(sortedCounts);
+
+	let string = ' ';
+	for (let i = 0; i < keys.length && i < 5; i++) {
 		const genre = keys[i];
 
-		if (counts[genre] >= 1) {
-			string = string.concat(` ${genre} (${counts[genre]} games),`);
+		if (sortedCounts[genre][1] > 1) {
+			string = string.concat(` ${sortedCounts[genre][0]} (${sortedCounts[genre][1]} games),`);
 		}
 	}
 	string = string.slice(1, -1);
@@ -252,7 +255,7 @@ async function GetFavouriteGenres() {
 async function GetFavouriteDevelopers() {
 	const developers = [];
 	const counts = [];
-	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
+	for (let i = 0; i < beatGameIGDBEntries.length && i < 5; i++) {
 		for (let j = 0; j < companies.length; j++) {
 			if (companies[j].developed) {
 				const developedGames = companies[j].developed;
@@ -267,14 +270,16 @@ async function GetFavouriteDevelopers() {
 		counts[item] = (counts[item] || 0) + 1;
 	});
 
-	const keys = Object.keys(counts);
+	const sortedCounts = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-	let string = '';
-	for (let i = 0; i < keys.length && i < 3; i++) {
+	const keys = Object.keys(sortedCounts);
+
+	let string = ' ';
+	for (let i = 0; i < keys.length; i++) {
 		const developer = keys[i];
 
-		if (counts[developer] >= 1) {
-			string = string.concat(` ${developer} (${counts[developer] } games),`);
+		if (sortedCounts[developer][1] > 1) {
+			string = string.concat(` ${sortedCounts[developer][0]} (${sortedCounts[developer][1] } games),`);
 		}
 	}
 	string = string.slice(1, -1);
@@ -300,14 +305,16 @@ async function GetFavouritePublishers() {
 		counts[item] = (counts[item] || 0) + 1;
 	});
 
-	const keys = Object.keys(counts);
+	const sortedCounts = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-	let string = '';
-	for (let i = 0; i < keys.length && i < 3; i++) {
+	const keys = Object.keys(sortedCounts);
+
+	let string = ' ';
+	for (let i = 0; i < keys.length && i < 5; i++) {
 		const publisher = keys[i];
 
-		if (counts[publisher] >= 1) {
-			string = string.concat(` ${publisher} (${counts[publisher] } games),`);
+		if (sortedCounts[publisher][1] > 1) {
+			string = string.concat(` ${sortedCounts[publisher][0]} (${sortedCounts[publisher][1]} games),`);
 		}
 	}
 	string = string.slice(1, -1);
