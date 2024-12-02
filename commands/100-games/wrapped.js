@@ -48,7 +48,7 @@ module.exports = {
 		const currentLeaderboardPlace = await GetLeaderboardPosition(userDatabaseEntry);
 
 		const embed = new EmbedBuilder();
-        embed.setColor(0xD36918);
+        embed.setColor(0x3BA55C);
         embed.setTitle('The 100 Games Challenge: 2024 Wrapped');
 		embed.setDescription(`Here are the stats for the games you played for the 100 Games Challenge in 2024 ${user.displayName}`);
         embed.setThumbnail(user.avatarURL());
@@ -127,7 +127,7 @@ async function GetNumberOfGamesBeat() {
 
 async function GetAverageBeatInterval() {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
-		const today = new Date();
+		const today = new Date(2025, 0, 1);
 		const start = new Date(2024, 0, 1);
 		const days = (today - start) / (1000 * 60 * 60 * 24);
 		const timepergame = days / userBeatenGamesDatabaseEntries.length;
