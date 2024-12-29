@@ -9,23 +9,30 @@ let companies = [];
 module.exports = {
 	data: new SlashCommandBuilder()
 	.setName('wrapped')
-	.setDescription('Get your 2024 summary.')
-	.addUserOption(option => option.setName('user').setDescription('The user to check')),
+	.setDescription('Get your yearly summary.')
+	.addUserOption(option => option.setName('user').setDescription('The user to check'))
+	.addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 })),
 	async execute(interaction) {
 
 		await interaction.deferReply();
 
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
+		let year = new Date().getFullYear();
+		const yearOption = interaction.options.getInteger('year');
 
         if (userOption) {
             user = userOption;
         }
 
+		if (yearOption) {
+			year = yearOption;
+		}
+
 		const userDatabaseEntry = await getUserRegistration(user);
 		if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-		await GetBeatenGamesForYear(userDatabaseEntry, 2024);
+		await GetBeatenGamesForYear(userDatabaseEntry, year);
 
 		if (!userBeatenGamesDatabaseEntries || userBeatenGamesDatabaseEntries.length === 0) {
 			return interaction.followUp({ content: `${user.username} hasn't beaten any games in this time frame.`, ephemeral: false });
@@ -35,8 +42,8 @@ module.exports = {
 		await GetDevelopers();
 
 		const numberOfGamesBeat = await GetNumberOfGamesBeat();
-		const averageBeatGameInterval = await GetAverageBeatInterval();
-		const mostActiveMonth = await GetMostActiveMonth(userDatabaseEntry);
+		const averageBeatGameInterval = await GetAverageBeatInterval(year);
+		const mostActiveMonth = await GetMostActiveMonth(userDatabaseEntry, year);
 		const oldestGameBeat = await GetOldestGameBeat();
 		const newestGameBeat = await GetNewestGameBeat();
 		const averageGameAge = await GetAverageGameAge();
@@ -44,13 +51,13 @@ module.exports = {
 		const favouriteGameDevs = await GetFavouriteDevelopers();
 		const favouriteGamePublishers = await GetFavouritePublishers();
 		const numberOfGamesDropped = await GetNumberOfDroppedGames(userDatabaseEntry);
-		const yearLeaderboardPlace = await GetYearLeaderboardPosition(userDatabaseEntry);
+		const yearLeaderboardPlace = await GetYearLeaderboardPosition(userDatabaseEntry, year);
 		const currentLeaderboardPlace = await GetLeaderboardPosition(userDatabaseEntry);
 
 		const embed = new EmbedBuilder();
         embed.setColor(0x3BA55C);
-        embed.setTitle('The 100 Games Challenge: 2024 Wrapped');
-		embed.setDescription(`Here are the stats for the games you played for the 100 Games Challenge in 2024 ${user.displayName}`);
+        embed.setTitle(`The 100 Games Challenge: ${year} Wrapped`);
+		embed.setDescription(`Here are the stats for the games you played for the 100 Games Challenge in ${year} ${user.displayName}`);
         embed.setThumbnail(user.avatarURL());
 		embed.setTimestamp();
 		embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });
@@ -135,10 +142,10 @@ async function GetNumberOfGamesBeat() {
 	return 0;
 }
 
-async function GetAverageBeatInterval() {
+async function GetAverageBeatInterval(year) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
-		const today = new Date(2025, 0, 1);
-		const start = new Date(2024, 0, 1);
+		const today = new Date(year, 0, 1);
+		const start = new Date(year, 0, 1);
 		const days = (today - start) / (1000 * 60 * 60 * 24);
 		const timepergame = days / userBeatenGamesDatabaseEntries.length;
 		return Math.round(timepergame);
@@ -147,22 +154,22 @@ async function GetAverageBeatInterval() {
 	return 0;
 }
 
-async function GetMostActiveMonth(userDatabaseEntry) {
+async function GetMostActiveMonth(userDatabaseEntry, year) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
 
 		const results = [];
-		results.push(['January', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-01-01', '2024-02-01')]);
-		results.push(['February', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-02-01', '2024-03-01')]);
-		results.push(['March', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-03-01', '2024-04-01')]);
-		results.push(['April', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-04-01', '2024-05-01')]);
-		results.push(['May', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-05-01', '2024-06-01')]);
-		results.push(['June', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-06-01', '2024-07-01')]);
-		results.push(['July', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-07-01', '2024-08-01')]);
-		results.push(['August', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-08-01', '2024-09-01')]);
-		results.push(['September', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-09-01', '2024-10-01')]);
-		results.push(['October', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-10-01', '2024-11-01')]);
-		results.push(['November', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-11-01', '2024-12-01')]);
-		results.push(['December', await getBeatenGamesForYear(userDatabaseEntry.id, '2024-12-01', '2025-01-01')]);
+		results.push(['January', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-01-01`, `${year}-02-01`)]);
+		results.push(['February', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-02-01`, `${year}-03-01`)]);
+		results.push(['March', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-03-01`, `${year}-04-01`)]);
+		results.push(['April', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-04-01`, `${year}-05-01`)]);
+		results.push(['May', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-05-01`, `${year}-06-01`)]);
+		results.push(['June', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-06-01`, `${year}-07-01`)]);
+		results.push(['July', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-07-01`, `${year}-08-01`)]);
+		results.push(['August', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-08-01`, `${year}-09-01`)]);
+		results.push(['September', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-09-01`, `${year}-10-01`)]);
+		results.push(['October', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-10-01`, `${year}-11-01`)]);
+		results.push(['November', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-11-01`, `${year}-12-01`)]);
+		results.push(['December', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-12-01`, `${year + 1}-01-01`)]);
 
 		const sorted = Object.entries(results).sort((a, b) => b[1][1] - a[1][1]);
 
@@ -365,8 +372,8 @@ async function GetNumberOfDroppedGames(userDatabaseEntry) {
 	return '0';
 }
 
-async function GetYearLeaderboardPosition(userDatabaseEntry) {
-	const leaderboard = await getLeaderboardEntriesBetweenDates('2024-01-01', '2024-12-31');
+async function GetYearLeaderboardPosition(userDatabaseEntry, year) {
+	const leaderboard = await getLeaderboardEntriesBetweenDates(`${year}-01-01`, `${year}-12-31`);
 	await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 	const index = leaderboard.findIndex(item => item.username === userDatabaseEntry.username) + 1;
 	return await appendOrdinalSuffix(index);
