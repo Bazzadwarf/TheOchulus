@@ -310,7 +310,7 @@ async function getLeaderboardEntries() {
         results.push(result);
     }
 
-    await results.sort((a, b) => parseInt(b.dateLastBeat) - parseInt(a.dateLastBeat));
+    await results.sort((a, b) => parseInt(a.dateLastBeat) - parseInt(b.dateLastBeat));
     await results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 
     return results;
@@ -347,7 +347,7 @@ async function getLeaderboardEntriesBetweenDates(start, end) {
         results.push(result);
     }
 
-    await results.sort((a, b) => parseInt(b.dateLastBeat) - parseInt(a.dateLastBeat));
+    await results.sort((a, b) => parseInt(a.dateLastBeat) - parseInt(b.dateLastBeat));
     await results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 
     return results;
