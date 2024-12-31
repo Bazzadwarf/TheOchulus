@@ -296,7 +296,8 @@ async function getLeaderboardEntries() {
         let dateLastBeat = new Date();
 
         if (count > 0) {
-            const lastGame = games.at(-1);
+            games.sort((a, b) => new Date(a.statusLastChanged) - new Date(b.statusLastChanged));
+            const lastGame = games[games.length - 1];
             dateLastBeat = lastGame.statusLastChanged;
         }
 
@@ -310,8 +311,8 @@ async function getLeaderboardEntries() {
         results.push(result);
     }
 
-    await results.sort((a, b) => parseInt(a.dateLastBeat) - parseInt(b.dateLastBeat));
-    await results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
+    results.sort((a, b) => new Date(a.dateLastBeat) - new Date(b.dateLastBeat));
+    results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 
     return results;
 }
@@ -333,7 +334,8 @@ async function getLeaderboardEntriesBetweenDates(start, end) {
         let dateLastBeat = new Date();
 
         if (count > 0) {
-            const lastGame = games.at(-1);
+            games.sort((a, b) => new Date(a.statusLastChanged) - new Date(b.statusLastChanged));
+            const lastGame = games[games.length - 1];
             dateLastBeat = lastGame.statusLastChanged;
         }
 
@@ -347,8 +349,8 @@ async function getLeaderboardEntriesBetweenDates(start, end) {
         results.push(result);
     }
 
-    await results.sort((a, b) => parseInt(a.dateLastBeat) - parseInt(b.dateLastBeat));
-    await results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
+    results.sort((a, b) => new Date(a.dateLastBeat) - new Date(b.dateLastBeat));
+    results.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 
     return results;
 }
