@@ -12,7 +12,6 @@ module.exports = {
 
         if (!leaderboard) return interaction.editReply({ content: 'There was a problem!', ephemeral: true });
 
-        await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
         let desc = '';
 
         let count = 0;

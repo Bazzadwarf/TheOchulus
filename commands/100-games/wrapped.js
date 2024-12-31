@@ -374,14 +374,12 @@ async function GetNumberOfDroppedGames(userDatabaseEntry) {
 
 async function GetYearLeaderboardPosition(userDatabaseEntry, year) {
 	const leaderboard = await getLeaderboardEntriesBetweenDates(`${year}-01-01`, `${year}-12-31`);
-	await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 	const index = leaderboard.findIndex(item => item.username === userDatabaseEntry.username) + 1;
 	return await appendOrdinalSuffix(index);
 }
 
 async function GetLeaderboardPosition(userDatabaseEntry) {
 	const leaderboard = await getLeaderboardEntries();
-	await leaderboard.sort((a, b) => parseInt(b.count) - parseInt(a.count));
 	const index = leaderboard.findIndex(item => item.username === userDatabaseEntry.username) + 1;
 	return await appendOrdinalSuffix(index);
 }
