@@ -4,3 +4,4 @@ config.json
 *.sqlite
 backups
 *.idea
+tempbeattimeline.png
