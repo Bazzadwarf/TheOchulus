@@ -4,7 +4,7 @@ const { getCoverURL, getGameJson, getCompanyInfo, getGenres, getReleaseDates } =
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('randomgame')
-        .setDescription('[Experimental] Get a random game from the IGDB database.')
+        .setDescription('Get a random game from the IGDB database.')
         .addBooleanOption(option => option.setName('madness').setDescription('Let The Ochulus off the rails at your own risk')),
         async execute(interaction) {
 
