@@ -114,6 +114,8 @@ module.exports = {
             },
           },
           y: {
+            beginAtZero: true,
+            min: 0,
             type: 'linear',
             title: {
               display: true,
