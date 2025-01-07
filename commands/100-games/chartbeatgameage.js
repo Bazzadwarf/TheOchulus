@@ -95,7 +95,8 @@ module.exports = {
       options: {
         scales: {
           x: {
-            beginAtZero: false,
+            beginAtZero: true,
+            min: 0,
             max: labels.length + 1,
             type: 'linear',
             position: 'bottom',
