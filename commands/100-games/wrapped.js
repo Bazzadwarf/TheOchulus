@@ -144,7 +144,13 @@ async function GetNumberOfGamesBeat() {
 
 async function GetAverageBeatInterval(year) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
-		const today = new Date(year, 0, 1);
+		let today = new Date();
+
+		if (today >= Date(`${year + 1}-01-01`))
+		{
+			today = new Date(year, 11, 31);
+		}
+
 		const start = new Date(year, 0, 1);
 		const days = (today - start) / (1000 * 60 * 60 * 24);
 		const timepergame = days / userBeatenGamesDatabaseEntries.length;
