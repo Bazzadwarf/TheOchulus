@@ -1,14 +1,26 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getLeaderboardEntries } = require('../../databaseHelperFunctions.js');
+const { getLeaderboardEntries, getLeaderboardEntriesBetweenDates } = require('../../databaseHelperFunctions.js');
 
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
-        .setDescription('Show the leaderboard!'),
+        .setDescription('Show the leaderboard!')
+        .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 })),
     async execute(interaction) {
-        const leaderboard = await getLeaderboardEntries();
         await interaction.deferReply();
+
+        const yearOption = interaction.options.getInteger('year');
+
+        let leaderboard;
+
+        if (yearOption) {
+            leaderboard = await getLeaderboardEntriesBetweenDates(`${yearOption}-01-01`, `${yearOption}-12-31`);
+        }
+        else {
+            leaderboard = await getLeaderboardEntries();
+        }
+
 
         if (!leaderboard) return interaction.editReply({ content: 'There was a problem!', ephemeral: true });
 
