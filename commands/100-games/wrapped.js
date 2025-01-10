@@ -50,7 +50,7 @@ module.exports = {
 		const favouriteGameGenres = await GetFavouriteGenres();
 		const favouriteGameDevs = await GetFavouriteDevelopers();
 		const favouriteGamePublishers = await GetFavouritePublishers();
-		const numberOfGamesDropped = await GetNumberOfDroppedGames(userDatabaseEntry);
+		const numberOfGamesDropped = await GetNumberOfDroppedGames(userDatabaseEntry, year);
 		const yearLeaderboardPlace = await GetYearLeaderboardPosition(userDatabaseEntry, year);
 		const currentLeaderboardPlace = await GetLeaderboardPosition(userDatabaseEntry);
 
@@ -361,11 +361,11 @@ async function GetFavouritePublishers() {
 	return string;
 }
 
-async function GetNumberOfDroppedGames(userDatabaseEntry) {
-	const userChangelog = await getChangelog(userDatabaseEntry.id);
+async function GetNumberOfDroppedGames(userDatabaseEntry, year) {
+	const userChangelog = await getChangelog(userDatabaseEntry.id, `${year}-01-01`, `${year}-12-31`);
 	const droppedGames = userChangelog.filter(item => item.oldStatus === 'playing' && item.newStatus === null);
 
-	if (droppedGames) {
+	if (droppedGames.length > 0) {
 		return droppedGames.length.toString();
 	}
 

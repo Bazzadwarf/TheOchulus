@@ -453,8 +453,8 @@ async function backupDatabase() {
     }
 }
 
-async function getChangelog(id) {
-    const changelogEntries = await Changelog.findAll({ where: { userId: id }, order: [ [ 'updatedAt', 'DESC' ]] })
+async function getChangelog(id, startDate, endDate) {
+    const changelogEntries = await Changelog.findAll({ where: { userId: id, createdAt: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'updatedAt', 'DESC' ]] })
     .catch((err) => {
         console.log(err);
     });
