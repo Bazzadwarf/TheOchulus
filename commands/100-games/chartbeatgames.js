@@ -229,10 +229,6 @@ async function GenerateTwoUserChart(user1, user2, interaction) {
     }
   }
 
-  console.log(labels);
-  console.log(user1values);
-  console.log(user2values);
-
   const date1 = new Date();
   const date2 = new Date('2024-01-01');
   const differenceInMilliseconds = date1 - date2;
