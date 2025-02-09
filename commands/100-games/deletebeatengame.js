@@ -38,9 +38,12 @@ module.exports = {
             .setColor(0xFF0000)
             .setAuthor({ name: `${interaction.user.displayName} deleted a game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name} deleted!`)
-            .setDescription(`${interaction.user.displayName} has ${planNum} game(s) planned, they are playing ${playNum} game(s), they have beaten ${beatNum} game(s), they have ${100 - beatNum} game(s) remaining.`)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
+
+            embed.addFields({ name: 'Planned', value: `${planNum} game(s)`, inline: true });
+            embed.addFields({ name: 'Now Playing', value: `${playNum} game(s)`, inline: true });
+            embed.addFields({ name: 'Beaten', value: `${beatNum}/100 (${100 - beatNum} game(s) remaining)`, inline: true });
 
             if (game.cover) {
                 const coverUrl = await getCoverURL(game.cover);
