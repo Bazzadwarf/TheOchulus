@@ -44,7 +44,7 @@ module.exports = {
                 const coverUrl = await getCoverURL(game.cover);
                 embed.setThumbnail(`${coverUrl}`);
             }
-            desc = `It has chosen **${game.name}**, glory be to The Ochulus!`;
+            desc = `It has chosen **[${game.name}](${game.url})**, glory be to The Ochulus!`;
         }
 
         embed.setDescription(desc);

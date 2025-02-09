@@ -38,6 +38,7 @@ module.exports = {
             .setColor(0xFF0000)
             .setAuthor({ name: `${interaction.user.displayName} deleted a game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name} deleted!`)
+            .setURL(game.url)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 

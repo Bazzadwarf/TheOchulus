@@ -64,6 +64,7 @@ module.exports = {
             .setColor(0x43ABEC)
             .setAuthor({ name: `${interaction.user.displayName} is planning to beat a game!`, iconURL: interaction.user.avatarURL() })
             .setTitle(`${game.name}!`)
+            .setURL(game.url)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setTimestamp();
 
