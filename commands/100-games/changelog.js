@@ -19,7 +19,7 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-        const changelogEntries = await getChangelog(userDatabaseEntry.id);
+        const changelogEntries = await getChangelog(userDatabaseEntry.id, '2024-01-01', `${new Date().getFullYear()}-12-31`);
         let desc = '';
 
         for (let i = 0; i < changelogEntries.length; i++) {
@@ -43,6 +43,8 @@ module.exports = {
                 i = changelogEntries.length;
             }
         }
+
+        console.log(changelogEntries);
 
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
