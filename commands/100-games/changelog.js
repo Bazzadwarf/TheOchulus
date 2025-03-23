@@ -20,6 +20,9 @@ module.exports = {
         if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
         const changelogEntries = await getChangelog(userDatabaseEntry.id, '2024-01-01', `${new Date().getFullYear()}-12-31`);
+
+        if (changelogEntries.length == 0) return interaction.editReply({ content: `${user.username} has no changelog entries.`, ephemeral: true });
+
         let desc = '';
 
         for (let i = 0; i < changelogEntries.length; i++) {
