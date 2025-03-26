@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const beatenGamesDatabaseEntries = await getAllBeatenGames();
+        let beatenGamesDatabaseEntries = await getAllBeatenGames();
         let desc = '';
 
         desc = desc.concat('__Total: ', beatenGamesDatabaseEntries.length, '__\n');
@@ -17,11 +17,19 @@ module.exports = {
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
             desc = 'No games beaten yet.';
         } else {
+            beatenGamesDatabaseEntries = beatenGamesDatabaseEntries.reverse();
             for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
                 const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
                 const userentry = await getUserFromId(beatenGamesDatabaseEntries[i].userId);
                 const date = beatenGamesDatabaseEntries[i].statusLastChanged.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
-                desc = desc.concat('**', date, '**: \t', game.name, ' \t*(', userentry.username, ')*\n');
+                const newDesc = String.prototype.concat('**', date, '**: \t', game.name, ' \t*(', userentry.username, ')*\n');
+
+                if (newDesc.length + desc.length < 4096) {
+                    desc = desc.concat(newDesc);
+                }
+                else {
+                    i = beatenGamesDatabaseEntries.length;
+                }
             }
         }
 
