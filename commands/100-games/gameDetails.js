@@ -69,16 +69,37 @@ module.exports = {
         }
 
         if (game.involved_companies) {
-            const companies = [];
+            const developers = [];
+            const publishers = [];
 
             for (const company of game.involved_companies) {
                 const info = await getCompanyInfo(company);
-                if (info.name) {
-                    companies.push(info.name);
+
+                if (info.developed)
+                {
+                    if (info.developed.find(item => item === game.id)) {
+                        developers.push(info.name);
+                    }
+                }
+
+
+                if (info.published)
+                {
+                    if (info.published.find(item => item === game.id)) {
+                        publishers.push(info.name);
+                    }
                 }
             }
 
-            embed.addFields({ name: 'Developers', value: `${companies.join(', ')}`, inline: true });
+            if (developers.length > 0)
+            {
+                embed.addFields({ name: 'Developers', value: `${developers.join(', ')}`, inline: true });
+            }
+
+            if (publishers.length > 0)
+            {
+                embed.addFields({ name: 'Publishers', value: `${publishers.join(', ')}`, inline: true });
+            }
         }
 
         embed.addFields({ name: 'Release Date', value: `${release_date}`, inline: true });
