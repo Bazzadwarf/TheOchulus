@@ -41,12 +41,17 @@ module.exports = {
             release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full' }).format(game.first_release_date * 1000);
         } else if (game.release_dates) {
             release_date = await getReleaseDates(game.release_dates[0]);
+        } else {
+            release_date = 'To be announced';
         }
 
         const genres = [];
-        for (const genreId of game.genres) {
+        if (game.genres)
+        {
+            for (const genreId of game.genres) {
             const genre = await getGenres(genreId);
             genres.push(genre);
+            }
         }
 
         // Build Embed
@@ -77,7 +82,11 @@ module.exports = {
         }
 
         embed.addFields({ name: 'Release Date', value: `${release_date}`, inline: true });
-        embed.addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true });
+
+        if (genres.length > 0)
+        {
+            embed.addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true });
+        }
 
         if (game.total_rating) {
             embed.addFields({ name: 'Rating', value: `${game.total_rating.toFixed(0)} / 100, ${game.total_rating_count } ratings`, inline: true });
