@@ -259,9 +259,11 @@ async function GetFavouriteGenres() {
 	const genres = [];
 	const counts = [];
 	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
-		for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
-			const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
-			genres.push(genre);
+		if (beatGameIGDBEntries[i].genres) {
+			for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
+				const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
+				genres.push(genre);
+			}
 		}
 	}
 
