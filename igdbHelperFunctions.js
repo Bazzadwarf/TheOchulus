@@ -133,7 +133,7 @@ async function getCompanyInfo(id) {
             developer = response[0];
         })
         .catch(err => {
-            console.error(err);
+            return console.error(err);
         });
 
     return developer;

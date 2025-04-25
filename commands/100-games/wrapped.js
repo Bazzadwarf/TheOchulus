@@ -116,8 +116,11 @@ async function GetDevelopers() {
 	const companyIds = new Set();
 
 	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
-		for (let j = 0; j < beatGameIGDBEntries[i].involved_companies.length; j++) {
-			companyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
+		if (beatGameIGDBEntries[i].involved_companies)
+		{
+			for (let j = 0; j < beatGameIGDBEntries[i].involved_companies.length; j++) {
+				companyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
+			}
 		}
 	}
 
