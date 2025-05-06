@@ -14,7 +14,6 @@
     "chart.js": "^4.4.7",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
-    "howlongtobeat": "^1.8.0",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6"
   },
