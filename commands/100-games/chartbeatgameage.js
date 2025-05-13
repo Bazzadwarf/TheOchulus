@@ -50,19 +50,21 @@ module.exports = {
       return interaction.editReply({ embeds: [embed] });
     }
 
-    const beatGameIGDBEntries = [];
+    const gameIds = [];
 
-	for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
-		const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
-		const json = await getGameJson(String.prototype.concat('where id = ', game.igdb_id, '; fields *;'));
-		beatGameIGDBEntries.push(json[0]);
-	}
+    for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
+      const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
+      gameIds.push(game.igdb_id);
+    }
+
+    const beatGameIGDBEntries = await getGameJson(String.prototype.concat(`where id = (${gameIds}); fields *; limit ${gameIds.length};`));
 
     const labels = [];
     const values = [];
 
-    for (let i = 0; i < beatGameIGDBEntries.length; i++) {
-      const date1 = new Date(beatGameIGDBEntries[i].first_release_date * 1000);
+    for (let i = 0; i < gameIds.length; i++) {
+      const game = beatGameIGDBEntries.find(item => item.id === gameIds[i]);
+      const date1 = new Date(game.first_release_date * 1000);
       const date2 = new Date();
       const differenceInMilliseconds = Math.abs(date2 - date1);
       const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
