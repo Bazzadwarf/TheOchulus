@@ -150,17 +150,17 @@ async function getGenres(id) {
             'Client-ID': `${process.env.igdbClientId}`,
             'Authorization': `Bearer ${process.env.igdbAccessToken}`,
           },
-          body: `where id = ${id}; fields *;`,
+          body: `where id = (${id}); fields *; limit ${id.length};`,
       })
       .then(response => response.json())
       .then(response => {
-        genre = response[0];
+        genre = response;
       })
         .catch(err => {
             console.error(err);
         });
 
-    return genre.name;
+    return genre;
 }
 
 async function getFranchise(id) {

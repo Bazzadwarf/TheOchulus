@@ -52,32 +52,35 @@ module.exports = {
         return interaction.editReply({ embeds: [embed] });
         }
 
-        const beatGameIGDBEntries = [];
+        const gameIds = [];
 
         for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
-            const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
-            const json = await getGameJson(String.prototype.concat('where id = ', game.igdb_id, '; fields *;'));
-            beatGameIGDBEntries.push(json[0]);
+          const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
+          gameIds.push(game.igdb_id);
         }
 
-        const genres = [];
+        const beatGameIGDBEntries = await getGameJson(String.prototype.concat(`where id = (${gameIds}); fields *; limit ${gameIds.length};`));
+
         const counts = [];
-        const cachedGenres = new Map();
+        const cachedGenres = new Set();
 
         for (let i = 0; i < beatGameIGDBEntries.length; i++) {
             if (beatGameIGDBEntries[i].genres) {
                 for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
+                    cachedGenres.add(beatGameIGDBEntries[i].genres[j]);
+                }
+            }
+        }
 
-                    if (cachedGenres.has(beatGameIGDBEntries[i].genres[j]))
-                    {
-                        genres.push(cachedGenres.get(beatGameIGDBEntries[i].genres[j]));
-                    }
-                    else
-                    {
-                        const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
-                        cachedGenres.set(beatGameIGDBEntries[i].genres[j], genre);
-                        genres.push(genre);
-                    }
+
+        const genresinfo = await getGenres([...cachedGenres]);
+
+        const genres = [];
+
+        for (let i = 0; i < beatGameIGDBEntries.length; i++) {
+            if (beatGameIGDBEntries[i].genres) {
+                for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
+                    genres.push(genresinfo.find(item => item.id === beatGameIGDBEntries[i].genres[j]).name);
                 }
             }
         }
