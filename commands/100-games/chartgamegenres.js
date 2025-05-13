@@ -72,7 +72,6 @@ module.exports = {
             }
         }
 
-
         const genresinfo = await getGenres([...cachedGenres]);
 
         const genres = [];
