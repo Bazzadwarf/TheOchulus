@@ -14,6 +14,7 @@ module.exports = {
 	.addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 })),
 	async execute(interaction) {
 
+
 		await interaction.deferReply();
 
         let user = interaction.user;
@@ -258,11 +259,22 @@ async function GetAverageGameAge() {
 async function GetFavouriteGenres() {
 	const genres = [];
 	const counts = [];
+	const cachedGenres = new Map();
+
 	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
 		if (beatGameIGDBEntries[i].genres) {
 			for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
-				const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
-				genres.push(genre);
+
+				if (cachedGenres.has(beatGameIGDBEntries[i].genres[j]))
+				{
+					genres.push(cachedGenres.get(beatGameIGDBEntries[i].genres[j]));
+				}
+				else
+				{
+					const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
+					cachedGenres.set(beatGameIGDBEntries[i].genres[j], genre);
+					genres.push(genre);
+				}
 			}
 		}
 	}
