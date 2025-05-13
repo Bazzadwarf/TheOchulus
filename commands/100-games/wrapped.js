@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getUserRegistration, getBeatenGames, checkGameStorageId, getChangelog, getLeaderboardEntriesBetweenDates, getLeaderboardEntries, getBeatenGamesForYear } = require('../../databaseHelperFunctions');
-const { getGameJson, getGenres, getCompanyInfo } = require('../../igdbHelperFunctions');
+const { getGameJson, getGenres, getInvolvedCompanies, getCompanies } = require('../../igdbHelperFunctions');
 
 let userBeatenGamesDatabaseEntries = {};
 let beatGameIGDBEntries = [];
@@ -114,29 +114,30 @@ async function GetIGDBEntries(array) {
 }
 
 async function GetDevelopers() {
-	companies = [];
-	const companyIds = new Set();
+	const involvedCompanyIds = new Set();
 
 	for (let i = 0; i < beatGameIGDBEntries.length; i++) {
 		if (beatGameIGDBEntries[i].involved_companies)
 		{
 			for (let j = 0; j < beatGameIGDBEntries[i].involved_companies.length; j++) {
-				companyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
+				involvedCompanyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
 			}
 		}
 	}
 
-	const ids = [...companyIds];
-	const tempIds = [];
+	const involvedIds = [...involvedCompanyIds];
 
-	for (let i = 0; i < ids.length; i++) {
-		const company = await getCompanyInfo(ids[i]);
-
-		if (!tempIds.includes(company.id)) {
-			tempIds.push(company.id);
-			companies.push(company);
+	const involvedCompanies = await getInvolvedCompanies(involvedIds);
+	const companyIds = new Set();
+	for (let i = 0; i < involvedCompanies.length; i++) {
+		if (involvedCompanies[i].company)
+		{
+			companyIds.add(involvedCompanies[i].company);
 		}
 	}
+
+	const compIds = [...companyIds];
+	companies = await getCompanies(compIds);
 }
 
 async function GetNumberOfGamesBeat() {
