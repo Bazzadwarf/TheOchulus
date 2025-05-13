@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getCoverURL, getGameJson, getCompanyInfo, getGenres, getFranchise, getReleaseDates } = require('../../igdbHelperFunctions.js');
+const { getCoverURL, getGameJson, getCompanyInfo, getGenres, getFranchise, getReleaseDates, getInvolvedCompanies, getCompanies } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -45,12 +45,13 @@ module.exports = {
             release_date = 'To be announced';
         }
 
-        const genres = [];
+        const genreNames = [];
         if (game.genres)
         {
-            for (const genreId of game.genres) {
-            const genre = await getGenres(genreId);
-            genres.push(genre);
+            const genres = await getGenres(game.genres);
+
+            for (const genre of genres) {
+                genreNames.push(genre.name);
             }
         }
 
@@ -69,24 +70,36 @@ module.exports = {
         }
 
         if (game.involved_companies) {
+
+            const involvedCompanies = await getInvolvedCompanies(game.involved_companies);
+            const companyIds = new Set();
+            for (let i = 0; i < involvedCompanies.length; i++) {
+                if (involvedCompanies[i].company)
+                {
+                    companyIds.add(involvedCompanies[i].company);
+                }
+            }
+
+            const compIds = [...companyIds];
+            const companies = await getCompanies(compIds);
+
             const developers = [];
             const publishers = [];
 
-            for (const company of game.involved_companies) {
-                const info = await getCompanyInfo(company);
+            for (const company of companies) {
 
-                if (info.developed)
+                if (company.developed)
                 {
-                    if (info.developed.find(item => item === game.id)) {
-                        developers.push(info.name);
+                    if (company.developed.find(item => item === game.id)) {
+                        developers.push(company.name);
                     }
                 }
 
 
-                if (info.published)
+                if (company.published)
                 {
-                    if (info.published.find(item => item === game.id)) {
-                        publishers.push(info.name);
+                    if (company.published.find(item => item === game.id)) {
+                        publishers.push(company.name);
                     }
                 }
             }
@@ -104,9 +117,9 @@ module.exports = {
 
         embed.addFields({ name: 'Release Date', value: `${release_date}`, inline: true });
 
-        if (genres.length > 0)
+        if (genreNames.length > 0)
         {
-            embed.addFields({ name: 'Genres', value: `${genres.join(', ')}`, inline: true });
+            embed.addFields({ name: 'Genres', value: `${genreNames.join(', ')}`, inline: true });
         }
 
         if (game.total_rating) {
