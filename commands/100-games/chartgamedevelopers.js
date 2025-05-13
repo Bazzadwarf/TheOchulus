@@ -168,7 +168,7 @@ module.exports = {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Occurrences of genre',
+                            text: 'Occurrences of developers',
                             font: {
                             size: 48,
                             family: 'Tahoma',
