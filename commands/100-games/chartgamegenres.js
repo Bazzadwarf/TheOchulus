@@ -62,11 +62,22 @@ module.exports = {
 
         const genres = [];
         const counts = [];
+        const cachedGenres = new Map();
+
         for (let i = 0; i < beatGameIGDBEntries.length; i++) {
             if (beatGameIGDBEntries[i].genres) {
                 for (let j = 0; j < beatGameIGDBEntries[i].genres.length; j++) {
-                    const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
-                    genres.push(genre);
+
+                    if (cachedGenres.has(beatGameIGDBEntries[i].genres[j]))
+                    {
+                        genres.push(cachedGenres.get(beatGameIGDBEntries[i].genres[j]));
+                    }
+                    else
+                    {
+                        const genre = await getGenres(beatGameIGDBEntries[i].genres[j]);
+                        cachedGenres.set(beatGameIGDBEntries[i].genres[j], genre);
+                        genres.push(genre);
+                    }
                 }
             }
         }
