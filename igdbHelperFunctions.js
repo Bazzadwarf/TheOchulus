@@ -94,6 +94,54 @@ async function getReleaseDates(id) {
     return date;
 }
 
+async function getInvolvedCompanies(ids) {
+    let involved_companies;
+
+    await fetch(
+        'https://api.igdb.com/v4/involved_companies',
+        { method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+          },
+          body: `where id = (${ids}); fields *; limit ${ids.length};`,
+        })
+        .then(response => response.json())
+        .then(response => {
+            involved_companies = response;
+        })
+        .catch(err => {
+            return console.error(err);
+        });
+
+    return involved_companies;
+}
+
+async function getCompanies(ids) {
+    let companies;
+
+    await fetch(
+        'https://api.igdb.com/v4/companies',
+        { method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+          },
+          body: `where id = (${ids}); fields *; limit ${ids.length};`,
+        })
+        .then(response => response.json())
+        .then(response => {
+            companies = response;
+        })
+        .catch(err => {
+            return console.error(err);
+        });
+
+    return companies;
+}
+
 async function getCompanyInfo(id) {
 
     let involved_company;
@@ -193,6 +241,8 @@ module.exports = {
     getPlatformID,
     getGameJson,
     getReleaseDates,
+    getInvolvedCompanies,
+    getCompanies,
     getCompanyInfo,
     getGenres,
     getFranchise,

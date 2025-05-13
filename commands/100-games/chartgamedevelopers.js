@@ -2,7 +2,7 @@ const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const fs = require('fs');
 const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
-const { getGameJson, getCompanyInfo } = require('../../igdbHelperFunctions.js');
+const { getGameJson, getInvolvedCompanies, getCompanies } = require('../../igdbHelperFunctions.js');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -18,7 +18,6 @@ module.exports = {
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
         const yearOption = interaction.options.getInteger('year');
-        const ignoreadventure = interaction.options.getBoolean('ignoreadventure');
 
         if (userOption) {
             user = userOption;
@@ -51,37 +50,40 @@ module.exports = {
         return interaction.editReply({ embeds: [embed] });
         }
 
-        const beatGameIGDBEntries = [];
+        const gameIds = [];
 
         for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
-            const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
-            const json = await getGameJson(String.prototype.concat('where id = ', game.igdb_id, '; fields *;'));
-            beatGameIGDBEntries.push(json[0]);
+          const game = await checkGameStorageId(beatenGamesDatabaseEntries[i].gameId);
+          gameIds.push(game.igdb_id);
         }
 
-        const companies = [];
-        const companyIds = new Set();
+        const beatGameIGDBEntries = await getGameJson(String.prototype.concat(`where id = (${gameIds}); fields *; limit ${gameIds.length};`));
+
+        const involvedCompanyIds = new Set();
 
         for (let i = 0; i < beatGameIGDBEntries.length; i++) {
             if (beatGameIGDBEntries[i].involved_companies)
             {
                 for (let j = 0; j < beatGameIGDBEntries[i].involved_companies.length; j++) {
-                    companyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
+                    involvedCompanyIds.add(beatGameIGDBEntries[i].involved_companies[j]);
                 }
             }
         }
 
-        const ids = [...companyIds];
-        const tempIds = [];
+        const involvedIds = [...involvedCompanyIds];
 
-        for (let i = 0; i < ids.length; i++) {
-            const company = await getCompanyInfo(ids[i]);
-
-            if (!tempIds.includes(company.id)) {
-                tempIds.push(company.id);
-                companies.push(company);
+        const involvedCompanies = await getInvolvedCompanies(involvedIds);
+        const companyIds = new Set();
+        for (let i = 0; i < involvedCompanies.length; i++) {
+            if (involvedCompanies[i].company)
+            {
+                companyIds.add(involvedCompanies[i].company);
             }
         }
+
+        const compIds = [...companyIds];
+        const companies = await getCompanies(compIds);
+
 
         const developers = [];
         const counts = [];
