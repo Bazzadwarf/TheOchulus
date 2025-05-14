@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getCoverURL, getGameJson, getGenres, getFranchise, getReleaseDates, getInvolvedCompanies, getCompanies } = require('../../igdbHelperFunctions.js');
+const { getCoverURL, getGameJson, getGenres, getFranchise, getReleaseDates, getInvolvedCompanies, getCompanies, getTimeToBeat } = require('../../igdbHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -87,11 +87,10 @@ module.exports = {
             const publishers = [];
 
             for (const company of companies) {
-
                 if (company.developed)
                 {
                     if (company.developed.find(item => item === game.id)) {
-                        developers.push(company.name);
+                        developers.push(`[${company.name}](${company.url})`);
                     }
                 }
 
@@ -99,7 +98,7 @@ module.exports = {
                 if (company.published)
                 {
                     if (company.published.find(item => item === game.id)) {
-                        publishers.push(company.name);
+                        publishers.push(`[${company.name}](${company.url})`);
                     }
                 }
             }
@@ -131,7 +130,32 @@ module.exports = {
 
         if (game.franchises) {
             const franchise = await getFranchise(game.franchises);
-            embed.addFields({ name: 'Franchise', value: `${franchise}`, inline: true });
+            embed.addFields({ name: 'Franchise', value: `[${franchise.name}](${franchise.url})`, inline: true });
+        }
+
+        const gameTimeToBeat = await getTimeToBeat(game.id);
+
+        if (gameTimeToBeat) {
+            const timings = [];
+
+            if (gameTimeToBeat.hastily) {
+                const hours = Math.floor(gameTimeToBeat.hastily / 3600);
+                timings.push(`Hastily: ${hours}hr`);
+            }
+
+            if (gameTimeToBeat.normally) {
+                const hours = Math.floor(gameTimeToBeat.normally / 3600);
+                timings.push(`Normally: ${hours}hr`);
+            }
+
+            if (gameTimeToBeat.completely) {
+                const hours = Math.floor(gameTimeToBeat.completely / 3600);
+                timings.push(`Completely: ${hours}hr`);
+            }
+
+            if (timings.length > 0) {
+                embed.addFields({ name: 'Time to Beat', value: `${timings.join('\n')}`, inline: true });
+            }
         }
 
         embed.addFields({ name: 'ID', value: `${game.id}`, inline: true });

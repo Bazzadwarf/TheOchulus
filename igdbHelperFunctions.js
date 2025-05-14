@@ -233,7 +233,32 @@ async function getFranchise(id) {
           console.error(err);
       });
 
-    return franchise.name;
+    return franchise;
+}
+
+async function getTimeToBeat(id) {
+
+    let gameTimeToBeats;
+
+    await fetch(
+        'https://api.igdb.com/v4/game_time_to_beats',
+        { method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+        },
+        body: `where game_id = ${id}; fields *;`,
+    })
+    .then(response => response.json())
+    .then(response => {
+        gameTimeToBeats = response[0];
+    })
+      .catch(err => {
+          console.error(err);
+      });
+
+    return gameTimeToBeats;
 }
 
 module.exports = {
@@ -246,4 +271,5 @@ module.exports = {
     getCompanyInfo,
     getGenres,
     getFranchise,
+    getTimeToBeat,
 };
