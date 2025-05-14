@@ -10,7 +10,8 @@ module.exports = {
 	.setName('chartbeatgameage')
 	.setDescription('Generate a scatter chart of the age of the games that have been beaten')
     .addUserOption(option => option.setName('user').setDescription('The user to check'))
-    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 })),
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }))
+    .addIntegerOption(option => option.setName('sorting').setDescription('How should the data be sorted?').addChoices({ name: 'Oldest to newest', value: 1 }, { name: 'Newest to oldest', value: 2 })),
 	async execute(interaction) {
 
     await interaction.deferReply();
@@ -18,6 +19,7 @@ module.exports = {
     let user = interaction.user;
     const userOption = interaction.options.getUser('user');
     const yearOption = interaction.options.getInteger('year');
+    const sortingOption = interaction.options.getInteger('sorting');
 
     if (userOption) {
         user = userOption;
@@ -68,8 +70,22 @@ module.exports = {
       const date2 = new Date();
       const differenceInMilliseconds = Math.abs(date2 - date1);
       const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
-      labels.push(i + 1);
       values.push(differenceInDays / 365);
+    }
+
+    switch (sortingOption) {
+      case 1:
+        values.sort((a, b) => b - a);
+        break;
+      case 2:
+        values.sort((a, b) => a - b);
+        break;
+      default:
+        break;
+    }
+
+    for (let i = 0; i < values.length; i++) {
+      labels.push(i + 1);
     }
 
     // Create a canvas
