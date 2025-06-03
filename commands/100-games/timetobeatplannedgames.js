@@ -65,12 +65,6 @@ module.exports = {
             }
         }
 
-        for (let i = 0; i < timings.length; i++)
-        {
-            console.log(timings[i]);
-        }
-
-
         const average = Math.round(timings.reduce((sum, num) => sum + num, 0));
         const desc = `It would take **${average} hours** to beat every game on ${user.displayName}'s planned game list.`;
 
