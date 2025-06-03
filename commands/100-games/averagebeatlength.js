@@ -24,8 +24,11 @@ module.exports = {
 
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
             const embed = new EmbedBuilder()
-            .setTitle(`${user.username}'s average beat game length`)
+            .setTitle(`${user.displayName}'s average beat game length`)
+            .setThumbnail(user.avatarURL())
             .setDescription(`${user.username} has not beat any games`)
+            .setTimestamp()
+            .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setColor(0xFF0000);
             return interaction.editReply({ embeds: [embed] });
         }
@@ -42,6 +45,18 @@ module.exports = {
         const timings = [];
         const timeData = await getTimesToBeat(`where game_id = (${gameIds}); fields *; limit ${gameIds.length};`);
 
+
+        if (!timeData || timeData.length == 0) {
+            const embed = new EmbedBuilder()
+            .setTitle(`${user.displayName}'s average beat game length`)
+            .setThumbnail(user.avatarURL())
+            .setDescription('Not enough data to calculate a valid number.')
+            .setTimestamp()
+            .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
+            .setColor(0xFF0000);
+            return interaction.editReply({ embeds: [embed] });
+        }
+
         for (let i = 0; i < timeData.length; i++)
         {
             if (timeData[i])
@@ -51,7 +66,7 @@ module.exports = {
             }
         }
 
-        const average = Math.floor(timings.reduce((sum, num) => sum + num, 0) / timings.length);
+        const average = Math.round(timings.reduce((sum, num) => sum + num, 0) / timings.length);
         const desc = `The average length of a game ${user.displayName} has beaten is **${average} hours**.`;
 
         const embed = new EmbedBuilder()
