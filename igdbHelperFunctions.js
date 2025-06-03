@@ -261,6 +261,30 @@ async function getTimeToBeat(id) {
     return gameTimeToBeats;
 }
 
+async function getTimesToBeat(body) {
+        let gameTimeToBeats;
+
+    await fetch(
+        'https://api.igdb.com/v4/game_time_to_beats',
+        { method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Client-ID': `${process.env.igdbClientId}`,
+            'Authorization': `Bearer ${process.env.igdbAccessToken}`,
+        },
+        body: body,
+    })
+    .then(response => response.json())
+    .then(response => {
+      gameTimeToBeats = response;
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+    return gameTimeToBeats;
+}
+
 module.exports = {
     getCoverURL,
     getPlatformID,
@@ -272,4 +296,5 @@ module.exports = {
     getGenres,
     getFranchise,
     getTimeToBeat,
+    getTimesToBeat,
 };
