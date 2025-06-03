@@ -24,9 +24,9 @@ module.exports = {
 
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
             const embed = new EmbedBuilder()
-            .setTitle(`${user.username}'s average beat game length`)
+            .setTitle(`Time to beat ${user.displayName}'s planned games`)
             .setThumbnail(user.avatarURL())
-            .setDescription(`${user.username} has not beat any games`)
+            .setDescription(`${user.username} has not planned any games`)
             .setTimestamp()
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
             .setColor(0xFF0000);
