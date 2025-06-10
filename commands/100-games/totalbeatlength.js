@@ -59,7 +59,7 @@ module.exports = {
         }
 
         let average;
-        let desc;
+        let desc = ' ';
 
         if (!showmissingOption) {
             for (let i = 0; i < timeData.length; i++)
@@ -81,9 +81,15 @@ module.exports = {
                     beatGameIGDBEntries = beatGameIGDBEntries.filter(item => item.id !== timeData[i].game_id);
                 }
             }
-            desc = beatGameIGDBEntries.map(item => `[${item.name}](<${item.url}>)`).join('\n');
-        }
 
+            if (beatGameIGDBEntries.length > 0)
+            {
+                desc = beatGameIGDBEntries.map(item => `[${item.name}](<${item.url}>)`).join('\n');
+            } else {
+                desc = 'No games have missing data.';
+            }
+
+        }
 
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
