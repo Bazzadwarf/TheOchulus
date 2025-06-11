@@ -70,14 +70,14 @@ module.exports = {
             {
                 values.push(timeData[i].normally / 3600);
                 const game = beatGameIGDBEntries.filter(item => item.id == timeData[i].game_id);
-                labels.push(game[0].name);
+                labels.push(`${game[0].name}, ${Math.round(timeData[i].normally / 3600)} hours`);
                 backgroundColors.push(`rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`);
             }
             else if (timeData[i].hastily)
             {
                 values.push(timeData[i].hastily / 3600);
                 const game = beatGameIGDBEntries.filter(item => item.id == timeData[i].game_id);
-                labels.push(game[0].name);
+                labels.push(`${game[0].name}, ${Math.round(timeData[i].hastily / 3600)} hours`);
                 backgroundColors.push(`rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`);
             }
         }
