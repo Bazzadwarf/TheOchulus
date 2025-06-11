@@ -13,6 +13,7 @@
     "axios": "^1.9.0",
     "canvas": "^3.0.0",
     "chart.js": "^4.4.7",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "discord.js": "^14.14.1",
     "dotenv": "^16.3.1",
     "sequelize": "^6.35.1",
