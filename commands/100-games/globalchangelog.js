@@ -16,13 +16,13 @@ module.exports = {
             const user = await getUserFromId(changelogEntries[i].userId);
 
             if (changelogEntries[i].newStatus == 'planning') {
-                newDesc = `:pencil: *${user.username}* planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
+                newDesc = `:pencil: *${user.username}* planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             } else if (changelogEntries[i].newStatus == 'playing') {
-                newDesc = `:video_game: *${user.username}* started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
+                newDesc = `:video_game: *${user.username}* started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             } else if (changelogEntries[i].newStatus == 'beat') {
-                newDesc = `:white_check_mark: *${user.username}* beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
+                newDesc = `:white_check_mark: *${user.username}* beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             } else if (!changelogEntries[i].newStatus) {
-                newDesc = `:x: *${user.username}* deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')})*\n`;
+                newDesc = `:x: *${user.username}* deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             }
 
             if (newDesc.length + desc.length < 4096) {

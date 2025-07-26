@@ -30,7 +30,7 @@ module.exports = {
             const days = (today - start) / (1000 * 60 * 60 * 24);
             const timepergame = days / beatenGamesDatabaseEntries.length;
             start.setDate(start.getDate() + (timepergame * 100));
-            const formatteddate = start.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+            const formatteddate = start.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
             desc = `${user.displayName} is estimated to finish the 100 Games Challenge on **${formatteddate}**.`;
         }
 

@@ -43,11 +43,11 @@ module.exports = {
             const days = (today - start) / (1000 * 60 * 60 * 24);
             const timepergame = days / beatenGamesDatabaseEntries.length;
             start.setDate(start.getDate() + (timepergame * 100));
-            const date = start.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+            const date = start.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
             embed.addFields({ name: 'Estimated Finish Date', value: `${date}`, inline: true });
         }
 
-        if (recentEntry) embed.addFields({ name: 'Last Updated', value: `${recentEntry.statusLastChanged.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}`, inline: true });
+        if (recentEntry) embed.addFields({ name: 'Last Updated', value: `${recentEntry.statusLastChanged.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })}`, inline: true });
 
         return interaction.editReply({ embeds: [embed] });
     },
