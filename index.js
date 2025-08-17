@@ -10,6 +10,10 @@ const { igdb } = require('./igdb.js');
 const { backupDatabase } = require('./databaseHelperFunctions.js');
 new igdb();
 
+const { Spotify } = require('./spotify.js');
+new Spotify();
+const { PostNewPlaylistUpdates } = require('./commands/fun/postnewplaylistupdates.js');
+
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -69,3 +73,16 @@ setInterval(() => {
 }, 86000000);
 
 backupDatabase();
+
+
+if (fs.existsSync('./playlistinfo.json')) {
+	const info = JSON.parse(fs.readFileSync('./playlistinfo.json'));
+	process.env.spotifyPlaylistTracking = info[0];
+	process.env.spotifyPlaylistChannel = info[1];
+}
+
+setInterval(() => {
+	PostNewPlaylistUpdates(client);
+}, 60000);
+
+PostNewPlaylistUpdates(client);
