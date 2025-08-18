@@ -83,6 +83,6 @@ if (fs.existsSync('./playlistinfo.json')) {
 
 setInterval(() => {
 	PostNewPlaylistUpdates(client);
-}, 60000);
+}, 300000);
 
 PostNewPlaylistUpdates(client);
