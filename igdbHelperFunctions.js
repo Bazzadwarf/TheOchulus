@@ -58,8 +58,10 @@ async function getGameJson(body) {
             'Authorization': `Bearer ${process.env.igdbAccessToken}`,
           },
           body: body,
-      })
-        .then(response => response.json())
+        })
+        .then(response => {
+            return response.json();
+        })
         .then(response => {
             res = response;
         })

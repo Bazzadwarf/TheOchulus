@@ -15,7 +15,7 @@ module.exports = {
 
         while (games.length == 0) {
             const offset = Math.floor(Math.random() * 10000);
-            const body = `fields *; limit 1; offset ${offset}; where (category = 0 | category = 4 | category = 8 | category = 9) & version_parent = null & total_rating_count >= ${count};`;
+            const body = `fields *; limit 1; offset ${offset}; where version_parent = null & total_rating_count >= ${count};`;
             games = await getGameJson(body);
         }
 

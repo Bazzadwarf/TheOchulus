@@ -28,7 +28,7 @@ module.exports = {
             body = body.concat('where id = ', gameid, '; ');
         } else if (gamename) {
             body = body.concat('search "', gamename, '"; ');
-            body = body.concat('limit 25; where (category = 0 | category = 4 | category = 8 | category = 9) & version_parent = null;');
+            body = body.concat('limit 25; where version_parent = null;');
         }
 
         body = body.concat('fields *;');

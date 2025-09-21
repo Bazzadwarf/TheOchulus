@@ -23,7 +23,7 @@ module.exports = {
             body = body.concat('fields *;');
         } else if (gamename) {
             body = body.concat('search "', gamename, '"; ');
-            body = body.concat('fields *; limit 25; where (category = 0 | category = 4) & version_parent = null;');
+            body = body.concat('fields *; limit 25; where version_parent = null;');
         }
 
         const games = await getGameJson(body);

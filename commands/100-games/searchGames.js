@@ -50,7 +50,7 @@ module.exports = {
 
 async function searchGamesWithMinimumReview(gamename) {
     let body = `search "${gamename}"; `;
-    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4 | category = 8 | category = 9) & version_parent = null & total_rating_count > 0;');
+    body = await body.concat('fields *; limit 25; where version_parent = null & total_rating_count > 0;');
 
     const games = await getGameJson(body);
 
@@ -59,7 +59,7 @@ async function searchGamesWithMinimumReview(gamename) {
 
 async function searchGamesWithoutMinimumReview(gamename) {
     let body = `search "${gamename}"; `;
-    body = await body.concat('fields *; limit 25; where (category = 0 | category = 4  | category = 8 | category = 9) & version_parent = null;');
+    body = await body.concat('fields *; limit 25; where version_parent = null;');
 
     const games = await getGameJson(body);
 
