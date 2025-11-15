@@ -31,7 +31,7 @@ module.exports = {
 
 
         for (const game of games) {
-            if (game.first_release_date && (game.category == 0 || game.category == 4 || game.category == 8 || game.category == 9)) {
+            if (game.first_release_date) {
                 const release_date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(game.first_release_date * 1000);
                 description = description.concat(`- **${game.name}** (*${release_date}*) - ID: ${game.id} \n`);
             }
