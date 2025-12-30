@@ -11,7 +11,7 @@ module.exports = {
 	.setName('wrapped')
 	.setDescription('Get your yearly summary.')
 	.addUserOption(option => option.setName('user').setDescription('The user to check'))
-	.addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 })),
+	.addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 })),
 	async execute(interaction) {
 
 

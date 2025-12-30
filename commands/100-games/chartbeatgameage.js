@@ -10,7 +10,7 @@ module.exports = {
 	.setName('chartbeatgameage')
 	.setDescription('Generate a scatter chart of the age of the games that have been beaten')
     .addUserOption(option => option.setName('user').setDescription('The user to check'))
-    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }))
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 }))
     .addIntegerOption(option => option.setName('sorting').setDescription('How should the data be sorted?').addChoices({ name: 'Oldest to newest', value: 1 }, { name: 'Newest to oldest', value: 2 })),
 	async execute(interaction) {
 

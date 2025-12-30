@@ -10,7 +10,7 @@ module.exports = {
 	.setName('chartgamegenres')
 	.setDescription('Generate a bar chart of the different genres of the games you have beat')
     .addUserOption(option => option.setName('user').setDescription('The user to check'))
-    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }))
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 }))
     .addBooleanOption(option => option.setName('ignoreadventure').setDescription('Exclude the Adventure genre from the bar chart')),
 	async execute(interaction) {
 
