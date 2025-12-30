@@ -1,16 +1,18 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getBeatenGames, checkGameStorageId, getBeatenGamesForYear } = require('../../databaseHelperFunctions.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('beatlist')
     .setDescription('Show the list of games you have beaten.')
-    .addUserOption(option => option.setName('user').setDescription('The user to check')),
+    .addUserOption(option => option.setName('user').setDescription('The user to check'))
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 })),
     async execute(interaction) {
         await interaction.deferReply();
 
         let user = interaction.user;
         const userOption = interaction.options.getUser('user');
+        const yearOption = interaction.options.getInteger('year');
 
         if (userOption) {
             user = userOption;
@@ -19,7 +21,16 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-        const beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
+        let beatenGamesDatabaseEntries;
+
+        if (yearOption) {
+            const start = new Date(yearOption, 0, 1);
+            const end = new Date(yearOption, 11, 31);
+            beatenGamesDatabaseEntries = await getBeatenGamesForYear(userDatabaseEntry.id, start, end);
+        } else {
+            beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
+        }
+
         let desc = '';
 
         if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {

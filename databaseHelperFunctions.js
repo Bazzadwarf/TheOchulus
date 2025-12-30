@@ -419,6 +419,20 @@ async function getGames(id, status) {
     return false;
 }
 
+async function getBeatenGamesForYear(userId, start, end) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const gameEntries = await LoggedGames.findAll({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (gameEntries) return gameEntries;
+
+    return false;
+}
+
 async function getAllBeatenGames() {
     const gameEntries = await LoggedGames.findAll({ where: { status: 'beat' }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
@@ -430,7 +444,7 @@ async function getAllBeatenGames() {
     return false;
 }
 
-async function getBeatenGamesForYear(userId, start, end) {
+async function getBeatenGameCountYear(userId, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
@@ -505,10 +519,11 @@ module.exports = {
     getPlayingGames,
     getBeatenGames,
     getGames,
+    getBeatenGamesForYear,
     getAllBeatenGames,
     backupDatabase,
     getChangelog,
     getAllChangelog,
     getLeaderboardEntriesBetweenDates,
-    getBeatenGamesForYear,
+    getBeatenGameCountYear,
 };

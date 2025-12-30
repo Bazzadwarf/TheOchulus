@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getUserRegistration, getBeatenGames, checkGameStorageId, getChangelog, getLeaderboardEntriesBetweenDates, getLeaderboardEntries, getBeatenGamesForYear } = require('../../databaseHelperFunctions');
+const { getUserRegistration, getBeatenGames, checkGameStorageId, getChangelog, getLeaderboardEntriesBetweenDates, getLeaderboardEntries, getBeatenGameCountYear } = require('../../databaseHelperFunctions');
 const { getGameJson, getGenres, getInvolvedCompanies, getCompanies } = require('../../igdbHelperFunctions');
 
 let userBeatenGamesDatabaseEntries = {};
@@ -33,7 +33,7 @@ module.exports = {
 		const userDatabaseEntry = await getUserRegistration(user);
 		if (!userDatabaseEntry) return interaction.followUp({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-		await GetBeatenGamesForYear(userDatabaseEntry, year);
+		await GetBeatenGameCountForYear(userDatabaseEntry, year);
 
 		if (!userBeatenGamesDatabaseEntries || userBeatenGamesDatabaseEntries.length === 0) {
 			return interaction.followUp({ content: `${user.username} hasn't beaten any games in this time frame.`, ephemeral: false });
@@ -94,7 +94,7 @@ function FilterByYear(array, targetYear) {
 	});
 }
 
-async function GetBeatenGamesForYear(userDatabaseEntry, year) {
+async function GetBeatenGameCountForYear(userDatabaseEntry, year) {
 	userBeatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
 
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
@@ -170,18 +170,18 @@ async function GetMostActiveMonth(userDatabaseEntry, year) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
 
 		const results = [];
-		results.push(['January', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-01-01`, `${year}-02-01`)]);
-		results.push(['February', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-02-01`, `${year}-03-01`)]);
-		results.push(['March', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-03-01`, `${year}-04-01`)]);
-		results.push(['April', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-04-01`, `${year}-05-01`)]);
-		results.push(['May', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-05-01`, `${year}-06-01`)]);
-		results.push(['June', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-06-01`, `${year}-07-01`)]);
-		results.push(['July', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-07-01`, `${year}-08-01`)]);
-		results.push(['August', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-08-01`, `${year}-09-01`)]);
-		results.push(['September', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-09-01`, `${year}-10-01`)]);
-		results.push(['October', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-10-01`, `${year}-11-01`)]);
-		results.push(['November', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-11-01`, `${year}-12-01`)]);
-		results.push(['December', await getBeatenGamesForYear(userDatabaseEntry.id, `${year}-12-01`, `${year + 1}-01-01`)]);
+		results.push(['January', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-01-01`, `${year}-02-01`)]);
+		results.push(['February', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-02-01`, `${year}-03-01`)]);
+		results.push(['March', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-03-01`, `${year}-04-01`)]);
+		results.push(['April', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-04-01`, `${year}-05-01`)]);
+		results.push(['May', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-05-01`, `${year}-06-01`)]);
+		results.push(['June', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-06-01`, `${year}-07-01`)]);
+		results.push(['July', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-07-01`, `${year}-08-01`)]);
+		results.push(['August', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-08-01`, `${year}-09-01`)]);
+		results.push(['September', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-09-01`, `${year}-10-01`)]);
+		results.push(['October', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-10-01`, `${year}-11-01`)]);
+		results.push(['November', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-11-01`, `${year}-12-01`)]);
+		results.push(['December', await getBeatenGameCountYear(userDatabaseEntry.id, `${year}-12-01`, `${year + 1}-01-01`)]);
 
 		const sorted = Object.entries(results).sort((a, b) => b[1][1] - a[1][1]);
 
