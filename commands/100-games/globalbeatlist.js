@@ -1,15 +1,20 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getAllBeatenGames, checkGameStorageId, getUserFromId } = require('../../databaseHelperFunctions.js');
+const { getAllBeatenGamesBetweenDates, checkGameStorageId, getUserFromId } = require('../../databaseHelperFunctions.js');
 
 
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('globalbeatlist')
-    .setDescription('Show a list of all games beaten for the 100 games challenge in chronological order.'),
+    .setDescription('Show a list of all games beaten for the 100 games challenge in chronological order.')
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 })),
     async execute(interaction) {
         await interaction.deferReply();
 
-        let beatenGamesDatabaseEntries = await getAllBeatenGames();
+        const yearOption = interaction.options.getInteger('year');
+        const start = (yearOption) ? new Date(yearOption, 0, 1) : new Date(2024, 0, 1);
+        const end = (yearOption) ? new Date(yearOption, 11, 31) : new Date();
+
+        let beatenGamesDatabaseEntries = await getAllBeatenGamesBetweenDates(start, end);
         let desc = '';
 
         desc = desc.concat('__Total: ', beatenGamesDatabaseEntries.length, '__\n');
