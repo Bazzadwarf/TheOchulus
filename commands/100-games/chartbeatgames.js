@@ -1,7 +1,7 @@
 const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const fs = require('fs');
-const { getUserRegistration, getBeatenGames } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getBeatenGamesForYear } = require('../../databaseHelperFunctions.js');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -9,34 +9,34 @@ module.exports = {
 	.setName('chartbeatgames')
 	.setDescription('Generate a line graph of the games beat over time')
   .addUserOption(option => option.setName('user1').setDescription('The first user to check'))
-  .addUserOption(option => option.setName('user2').setDescription('The second user to check')),
+  .addUserOption(option => option.setName('user2').setDescription('The second user to check'))
+  .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 })),
 	async execute(interaction) {
 
     await interaction.deferReply();
 
-    let user = interaction.user;
     const userOption = interaction.options.getUser('user1');
-
+    const user = (userOption) ? userOption : interaction.user;
     const user2 = interaction.options.getUser('user2');
 
-    if (userOption) {
-        user = userOption;
-    }
+    const yearOption = interaction.options.getInteger('year');
+    const start = (yearOption) ? new Date(yearOption, 0, 1) : new Date(2024, 0, 1);
+    const end = (yearOption) ? new Date(yearOption, 11, 31) : new Date();
 
     if (user && user2 && user != user2) {
-      GenerateTwoUserChart(user, user2, interaction);
+      GenerateTwoUserChart(user, user2, interaction, start, end);
     }
     else {
-      GenerateSingleUserChart(user, interaction);
+      GenerateSingleUserChart(user, interaction, start, end);
     }
 	},
 };
 
-async function GenerateSingleUserChart(user, interaction) {
+async function GenerateSingleUserChart(user, interaction, start, end) {
   const userDatabaseEntry = await getUserRegistration(user);
   if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-  const beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
+  const beatenGamesDatabaseEntries = await getBeatenGamesForYear(userDatabaseEntry.id, start, end);
 
   if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
     const embed = new EmbedBuilder()
@@ -51,15 +51,15 @@ async function GenerateSingleUserChart(user, interaction) {
 
   for (let i = 0; i < beatenGamesDatabaseEntries.length; i++) {
     const date1 = new Date(beatenGamesDatabaseEntries[i].statusLastChanged);
-    const date2 = new Date('2024-01-01');
+    const date2 = start;
     const differenceInMilliseconds = date1 - date2;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
     labels.push(differenceInDays);
     values.push(i + 1);
   }
 
-  const date1 = new Date();
-  const date2 = new Date('2024-01-01');
+  const date1 = (end > new Date()) ? new Date() : end;
+  const date2 = start;
   const differenceInMilliseconds = date1 - date2;
   const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
@@ -162,11 +162,11 @@ async function GenerateSingleUserChart(user, interaction) {
   });
 }
 
-async function GenerateTwoUserChart(user1, user2, interaction) {
+async function GenerateTwoUserChart(user1, user2, interaction, start, end) {
   const user1DatabaseEntry = await getUserRegistration(user1);
   if (!user1DatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user1.username}".`, ephemeral: true });
 
-  const user1BeatenGamesDatabaseEntries = await getBeatenGames(user1DatabaseEntry.id);
+  const user1BeatenGamesDatabaseEntries = await getBeatenGamesForYear(user1DatabaseEntry.id, start, end);
 
   if (!user1BeatenGamesDatabaseEntries || user1BeatenGamesDatabaseEntries.length == 0) {
     const embed = new EmbedBuilder()
@@ -179,7 +179,7 @@ async function GenerateTwoUserChart(user1, user2, interaction) {
   const user2DatabaseEntry = await getUserRegistration(user2);
   if (!user1DatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user2.username}".`, ephemeral: true });
 
-  const user2BeatenGamesDatabaseEntries = await getBeatenGames(user2DatabaseEntry.id);
+  const user2BeatenGamesDatabaseEntries = await getBeatenGamesForYear(user2DatabaseEntry.id, start, end);
 
   if (!user2BeatenGamesDatabaseEntries || user2BeatenGamesDatabaseEntries.length == 0) {
     const embed = new EmbedBuilder()
@@ -193,7 +193,7 @@ async function GenerateTwoUserChart(user1, user2, interaction) {
 
   for (let i = 0; i < user1BeatenGamesDatabaseEntries.length; i++) {
     const date1 = new Date(user1BeatenGamesDatabaseEntries[i].statusLastChanged);
-    const date2 = new Date('2024-01-01');
+    const date2 = start;
     const differenceInMilliseconds = date1 - date2;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 
@@ -202,7 +202,7 @@ async function GenerateTwoUserChart(user1, user2, interaction) {
 
   for (let i = 0; i < user2BeatenGamesDatabaseEntries.length; i++) {
     const date1 = new Date(user2BeatenGamesDatabaseEntries[i].statusLastChanged);
-    const date2 = new Date('2024-01-01');
+    const date2 = start;
     const differenceInMilliseconds = date1 - date2;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
 
@@ -229,8 +229,8 @@ async function GenerateTwoUserChart(user1, user2, interaction) {
     }
   }
 
-  const date1 = new Date();
-  const date2 = new Date('2024-01-01');
+  const date1 = (end > new Date()) ? new Date() : end;
+  const date2 = start;
   const differenceInMilliseconds = date1 - date2;
   const differenceInDays = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
