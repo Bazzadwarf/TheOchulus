@@ -2,22 +2,22 @@ const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const ChartDataLabels = require('chartjs-plugin-datalabels');
 const fs = require('fs');
-const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
+const { getUserRegistration, getBeatenGamesForYear, checkGameStorageId } = require('../../databaseHelperFunctions.js');
 const { getGameJson, getTimesToBeat } = require('../../igdbHelperFunctions.js');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
 	.setName('chartbeatlengths')
-	.setDescription('Generate a line graph of the games beat over time')
-    .addUserOption(option => option.setName('user1').setDescription('The user to check')),
+	.setDescription('Generate a pie chart of the length of games beat')
+    .addUserOption(option => option.setName('user1').setDescription('The user to check'))
+    .addIntegerOption(option => option.setName('year').setDescription('The year to check').addChoices({ name: '2024', value: 2024 }, { name: '2025', value: 2025 }, { name: '2026', value: 2026 })),
 	async execute(interaction) {
 
     await interaction.deferReply();
 
     let user = interaction.user;
     const userOption = interaction.options.getUser('user1');
-
 
     if (userOption) {
         user = userOption;
@@ -26,7 +26,11 @@ module.exports = {
     const userDatabaseEntry = await getUserRegistration(user);
     if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${user.username}".`, ephemeral: true });
 
-    const beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
+    const yearOption = interaction.options.getInteger('year');
+    const start = (yearOption) ? new Date(yearOption, 0, 1) : new Date(2024, 0, 1);
+    const end = (yearOption) ? new Date(yearOption, 11, 31) : new Date();
+
+    const beatenGamesDatabaseEntries = await getBeatenGamesForYear(userDatabaseEntry.id, start, end);
 
     if (!beatenGamesDatabaseEntries || beatenGamesDatabaseEntries.length == 0) {
         const embed = new EmbedBuilder()
