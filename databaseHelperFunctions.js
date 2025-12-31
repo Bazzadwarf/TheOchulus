@@ -423,7 +423,7 @@ async function getBeatenGamesForYear(userId, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const gameEntries = await LoggedGames.findAll({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
+    const gameEntries = await LoggedGames.findAll({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
