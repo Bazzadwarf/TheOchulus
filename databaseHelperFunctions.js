@@ -1,4 +1,4 @@
-const { Users, Games, LoggedGames, Changelog } = require ('./dbObjects.js');
+const { Users, Games, LoggedGames, Changelog, TrackedPlaylists } = require ('./dbObjects.js');
 const fs = require('fs');
 const { Op } = require('sequelize');
 
@@ -503,6 +503,67 @@ async function getAllChangelog() {
     return false;
 }
 
+async function getAllTrackedPlaylists() {
+    const trackedPlaylists = await TrackedPlaylists.findAll()
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (trackedPlaylists) return trackedPlaylists;
+
+    return false;
+}
+
+async function checkTrackedSpotifyPlaylist(spotifyPlaylistId, discordChannelId) {
+
+    const trackedPlaylist = await TrackedPlaylists.findOne({ where: { spotifyPlaylistId: spotifyPlaylistId, discordChannelId: discordChannelId } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (trackedPlaylist) return trackedPlaylist;
+
+    return false;
+}
+
+async function createTrackedPlaylist(spotifyPlaylistId, youtubePlaylistId, discordChannelId, currentSongCount) {
+    const tp = await TrackedPlaylists.create({ spotifyPlaylistId: spotifyPlaylistId, youtubePlaylistId: youtubePlaylistId, discordChannelId: discordChannelId, currentSongCount: currentSongCount })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (tp) return tp;
+
+    return null;
+}
+
+async function updateYoutubePlaylistId(spotifyPlaylistId, newYoutubePlaylistId) {
+    const tp = await TrackedPlaylists.findOne({ where: { spotifyPlaylistId: spotifyPlaylistId } })
+    .catch((err) => {
+        console.log(err);
+    });
+    if (!tp) return null;
+
+    tp.youtubePlaylistId = newYoutubePlaylistId;
+    await tp.save();
+
+    return tp;
+}
+
+async function updateCurrentSongCount(spotifyPlaylistId, newSongCount) {
+    const tp = await TrackedPlaylists.findOne({ where: { spotifyPlaylistId: spotifyPlaylistId } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (!tp) return null;
+
+    tp.currentSongCount = newSongCount;
+
+    await tp.save();
+
+    return tp;
+}
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
@@ -541,4 +602,9 @@ module.exports = {
     getAllChangelog,
     getLeaderboardEntriesBetweenDates,
     getBeatenGameCountYear,
+    getAllTrackedPlaylists,
+    checkTrackedSpotifyPlaylist,
+    createTrackedPlaylist,
+    updateYoutubePlaylistId,
+    updateCurrentSongCount,
 };

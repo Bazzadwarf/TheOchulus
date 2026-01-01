@@ -74,13 +74,6 @@ setInterval(() => {
 
 backupDatabase();
 
-
-if (fs.existsSync('./playlistinfo.json')) {
-	const info = JSON.parse(fs.readFileSync('./playlistinfo.json'));
-	process.env.spotifyPlaylistTracking = info[0];
-	process.env.spotifyPlaylistChannel = info[1];
-}
-
 setInterval(() => {
 	PostNewPlaylistUpdates(client);
 }, 300000);

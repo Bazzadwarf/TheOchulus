@@ -11,6 +11,7 @@ const db = require('./models/games.js')(sequelize, Sequelize.DataTypes);
 require('./models/users.js')(sequelize, Sequelize.DataTypes);
 require('./models/beatenGames.js')(sequelize, Sequelize.DataTypes);
 require('./models/changelog.js')(sequelize, Sequelize.DataTypes);
+require('./models/trackedplaylists.js')(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
