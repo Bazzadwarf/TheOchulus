@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
     return sequelize.define('trackedplaylists', {
         spotifyPlaylistId: {
             type: DataTypes.STRING,
-            unique: true,
         },
         playlistLastUpdated: {
             type: DataTypes.DATE,
