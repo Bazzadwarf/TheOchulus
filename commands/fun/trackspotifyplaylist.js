@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { checkTrackedSpotifyPlaylist, createTrackedPlaylist, updateYoutubePlaylistId } = require('../../databaseHelperFunctions.js');
+const { checkTrackedSpotifyPlaylist, createTrackedPlaylist } = require('../../databaseHelperFunctions.js');
 const { getSpotifyPlaylistDetails, getAllPlaylistTracks } = require('../../spotifyHelperFunctions.js');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
 	.setName('trackspotifyplaylist')
 	.setDescription('Tracks for changes in a spotify playlist and posts updates in the channel this message is sent')
     .addStringOption(option => option.setName('spotifyplaylisturl').setDescription('A link to the spotify playlist to track.').setRequired(true))
-    .addStringOption(option => option.setName('youtubeplaylisturl').setDescription('A link to the youtube playlist to sync to.')),
+    .addBooleanOption(option => option.setName('postalltracks').setDescription('Post all the songs currently in the playlist on first check.').setRequired(false)),
 	async execute(interaction) {
 
         await interaction.deferReply();
@@ -16,12 +16,7 @@ module.exports = {
         const lastIndexOf = spotifyPlaylistURL.lastIndexOf('/');
         const playlistID = spotifyPlaylistURL.substr(lastIndexOf + 1);
 
-        const youtubePlaylistURL = interaction.options.getString('youtubeplaylisturl');
-        let youtubePlaylistID = null;
-        if (youtubePlaylistURL) {
-            const youtubeLastIndexOf = youtubePlaylistURL.lastIndexOf('=');
-            youtubePlaylistID = youtubePlaylistURL.substr(youtubeLastIndexOf + 1);
-        }
+        const postAllTracks = interaction.options.getBoolean('postalltracks');
 
         const embed = new EmbedBuilder()
             .setColor(0xFFD700)
@@ -36,7 +31,7 @@ module.exports = {
             const playlistDetails = await getSpotifyPlaylistDetails(playlistID);
             const tracks = await getAllPlaylistTracks(playlistDetails.id);
 
-            createTrackedPlaylist(playlistID, youtubePlaylistID, interaction.channelId, tracks.length);
+            createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? tracks.length : 0);
 
             embed.setColor(0x1db954);
             embed.setTitle(`Now tracking ${response.name}`);
@@ -47,13 +42,6 @@ module.exports = {
             }
 
             embed.setDescription(`There are currently ${response.tracks.total} tracks in the playlist.`);
-        }
-        else if (result.youtubePlaylistId !== youtubePlaylistID) {
-            updateYoutubePlaylistId(playlistID, youtubePlaylistID);
-            embed.setColor(0x1db954);
-            embed.setTitle(`Updated YouTube playlist for ${response.name}`);
-            embed.setURL(response.external_urls.spotify);
-            embed.setDescription('The YouTube playlist linked to this Spotify playlist has been updated.');
         }
         else {
             embed.setColor(0xFFFF00);

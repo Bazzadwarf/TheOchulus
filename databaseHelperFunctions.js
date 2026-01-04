@@ -526,8 +526,8 @@ async function checkTrackedSpotifyPlaylist(spotifyPlaylistId, discordChannelId) 
     return false;
 }
 
-async function createTrackedPlaylist(spotifyPlaylistId, youtubePlaylistId, discordChannelId, currentSongCount) {
-    const tp = await TrackedPlaylists.create({ spotifyPlaylistId: spotifyPlaylistId, youtubePlaylistId: youtubePlaylistId, discordChannelId: discordChannelId, currentSongCount: currentSongCount })
+async function createTrackedPlaylist(spotifyPlaylistId, discordChannelId, currentSongCount) {
+    const tp = await TrackedPlaylists.create({ spotifyPlaylistId: spotifyPlaylistId, discordChannelId: discordChannelId, currentSongCount: currentSongCount })
     .catch((err) => {
         console.log(err);
     });

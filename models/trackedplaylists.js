@@ -4,10 +4,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             unique: true,
         },
-        youtubePlaylistId: {
-            type: DataTypes.STRING,
-            unique: true,
-        },
         playlistLastUpdated: {
             type: DataTypes.DATE,
             allowNull: true,
