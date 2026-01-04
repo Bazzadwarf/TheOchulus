@@ -31,7 +31,7 @@ module.exports = {
             const playlistDetails = await getSpotifyPlaylistDetails(playlistID);
             const tracks = await getAllPlaylistTracks(playlistDetails.id);
 
-            createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? tracks.length : 0);
+            createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? 0 : tracks.length);
 
             embed.setColor(0x1db954);
             embed.setTitle(`Now tracking ${response.name}`);
