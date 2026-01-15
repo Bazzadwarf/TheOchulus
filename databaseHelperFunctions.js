@@ -537,6 +537,17 @@ async function createTrackedPlaylist(spotifyPlaylistId, discordChannelId, curren
     return null;
 }
 
+async function deleteTrackedPlaylist(spotifyPlaylistId, discordChannelId) {
+    const tp = await TrackedPlaylists.destroy({ where: { spotifyPlaylistId: spotifyPlaylistId, discordChannelId: discordChannelId } })
+    .catch((err) => {
+        console.log(err);
+    });
+
+    if (tp) return tp;
+
+    return null;
+}
+
 async function updateYoutubePlaylistId(spotifyPlaylistId, newYoutubePlaylistId) {
     const tp = await TrackedPlaylists.findOne({ where: { spotifyPlaylistId: spotifyPlaylistId } })
     .catch((err) => {
@@ -607,4 +618,5 @@ module.exports = {
     createTrackedPlaylist,
     updateYoutubePlaylistId,
     updateCurrentSongCount,
+    deleteTrackedPlaylist,
 };
