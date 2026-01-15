@@ -14,7 +14,7 @@ module.exports = {
 
         const spotifyPlaylistURL = interaction.options.getString('spotifyplaylisturl');
         const lastIndexOf = spotifyPlaylistURL.lastIndexOf('/');
-        const playlistID = spotifyPlaylistURL.substr(lastIndexOf + 1);
+        let playlistID = spotifyPlaylistURL.substr(lastIndexOf + 1);
 
         const postAllTracks = interaction.options.getBoolean('postalltracks');
 
@@ -30,6 +30,8 @@ module.exports = {
         if (!result) {
             const playlistDetails = await getSpotifyPlaylistDetails(playlistID);
             const tracks = await getAllPlaylistTracks(playlistDetails.id);
+
+            playlistID = playlistDetails.id;
 
             createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? 0 : tracks.length);
 

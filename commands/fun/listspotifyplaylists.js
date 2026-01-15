@@ -21,7 +21,7 @@ module.exports = {
 
             for (const playlist of channelPlaylists) {
                 const details = await getSpotifyPlaylistDetails(playlist.spotifyPlaylistId);
-                embed.addFields({ name: details.name, value: `Songs Tracked: ${playlist.currentSongCount}\n[Spotify Link](${details.external_urls.spotify})`, inline: false });
+                embed. addFields({ name: details.name, value: `Songs Tracked: ${playlist.currentSongCount}\n[Spotify Link](${details.external_urls.spotify})`, inline: false });
             }
 
             embed.setColor(0x1db954);

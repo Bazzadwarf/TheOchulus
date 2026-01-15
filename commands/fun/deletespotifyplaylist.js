@@ -13,7 +13,7 @@ module.exports = {
 
         const spotifyPlaylistURL = interaction.options.getString('spotifyplaylisturl');
         const lastIndexOf = spotifyPlaylistURL.lastIndexOf('/');
-        const playlistID = spotifyPlaylistURL.substr(lastIndexOf + 1);
+        let playlistID = spotifyPlaylistURL.substr(lastIndexOf + 1);
 
 
         const embed = new EmbedBuilder()
@@ -24,6 +24,7 @@ module.exports = {
         const response = await getSpotifyPlaylistDetails(playlistID);
 
         if (response) {
+            playlistID = response.id;
             deleteTrackedPlaylist(playlistID, interaction.channelId);
 
             embed.setColor(0xFF0000);
