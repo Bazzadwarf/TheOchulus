@@ -4,8 +4,8 @@ const { getSpotifyPlaylistDetails } = require('../../spotifyHelperFunctions.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-	.setName('listpotifyplaylists')
-	.setDescription('List all tracked spotifty playlists in this channel'),
+	.setName('listspotifyplaylists')
+	.setDescription('List all tracked spotify playlists in this channel'),
 	async execute(interaction) {
 
         await interaction.deferReply();
