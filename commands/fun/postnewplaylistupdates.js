@@ -15,7 +15,7 @@ async function PostNewPlaylistUpdates(client) {
 
         const tracks = await getAllPlaylistTracks(playlistDetails.id);
 
-        if (tracks.length == playlist.currentSongCount) {
+        if (tracks.length === playlist.currentSongCount) {
             continue;
         }
 
