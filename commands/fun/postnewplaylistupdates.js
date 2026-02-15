@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('@discordjs/builders');
 const fs = require('fs');
 const { getAllTrackedPlaylists, updateCurrentSongCount } = require('../../databaseHelperFunctions.js');
 const { getSpotifyPlaylistDetails, getAllPlaylistTracks } = require('../../spotifyHelperFunctions.js');
+const { TrackedSongs } = require ('../../dbObjects.js');
 
 async function PostNewPlaylistUpdates(client) {
     if (!process.env.spotifyAccessToken) {
@@ -11,20 +12,39 @@ async function PostNewPlaylistUpdates(client) {
     const playlists = await getAllTrackedPlaylists();
 
     for (const playlist of playlists) {
+
         const playlistDetails = await getSpotifyPlaylistDetails(playlist.spotifyPlaylistId);
 
         const tracks = await getAllPlaylistTracks(playlistDetails.id);
 
-        if (tracks.length == playlist.currentSongCount) {
-            continue;
-        }
-
         const channel = await client.channels.cache.get(`${playlist.discordChannelId}`);
 
-        for (let i = (playlist.currentSongCount) ? playlist.currentSongCount : 0; i < tracks.length; i++) {
-            const track = tracks[i];
+        for (const track of tracks) {
+            if (!track.track) {
+                continue;
+            }
 
-            const embed = new EmbedBuilder()
+            const trackedSong = await TrackedSongs.findOne({
+                where: {
+                    spotifySongId: track.track.id,
+                    playlistSpotifyId: playlistDetails.id,
+                    userAddedSpotifyId: track.added_by ? track.added_by.id : null,
+                    discordChannelId: playlist.discordChannelId,
+                },
+            });
+
+            if (trackedSong) {
+                continue;
+            }
+
+            await TrackedSongs.create({
+                spotifySongId: track.track.id,
+                playlistSpotifyId: playlistDetails.id,
+                userAddedSpotifyId: track.added_by ? track.added_by.id : null,
+                discordChannelId: playlist.discordChannelId,
+            });
+
+             const embed = new EmbedBuilder()
 
             .setColor(0x1db954)
             .setTitle(`${track.track.name} added!`)
@@ -67,6 +87,8 @@ async function PostNewPlaylistUpdates(client) {
             {
                 embed.setThumbnail(track.track.album.images[0].url);
             }
+
+            embed.setDescription(`[Go to the playlist on spotify!](${playlistDetails.external_urls.spotify})`);
 
             await channel.send({ embeds: [embed] });
         }

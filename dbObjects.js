@@ -12,6 +12,7 @@ const Games = require('./models/games.js')(sequelize, Sequelize.DataTypes);
 const LoggedGames = require('./models/beatenGames.js')(sequelize, Sequelize.DataTypes);
 const Changelog = require('./models/changelog.js')(sequelize, Sequelize.DataTypes);
 const TrackedPlaylists = require('./models/trackedplaylists.js')(sequelize, Sequelize.DataTypes);
+const TrackedSongs = require('./models/trackedsongs.js')(sequelize, Sequelize.DataTypes);
 
 // Create userId foreignKey in LoggedGames
 Users.hasMany(LoggedGames);
@@ -54,4 +55,4 @@ sequelize.sync({ alter: true })
     console.log(err);
 });
 
-module.exports = { sequelize, Users, Games, LoggedGames, Changelog, TrackedPlaylists };
+module.exports = { sequelize, Users, Games, LoggedGames, Changelog, TrackedPlaylists, TrackedSongs };

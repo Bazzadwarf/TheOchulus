@@ -1,4 +1,4 @@
-const { Users, Games, LoggedGames, Changelog, TrackedPlaylists } = require ('./dbObjects.js');
+const { Users, Games, LoggedGames, Changelog, TrackedPlaylists, TrackedSongs } = require ('./dbObjects.js');
 const fs = require('fs');
 const { Op } = require('sequelize');
 
@@ -543,6 +543,11 @@ async function deleteTrackedPlaylist(spotifyPlaylistId, discordChannelId) {
         console.log(err);
     });
 
+    await TrackedSongs.destroy({ where: { playlistSpotifyId: spotifyPlaylistId, discordChannelId: discordChannelId } })
+    .catch((err) => {
+        console.log(err);
+    });
+
     if (tp) return tp;
 
     return null;
@@ -575,6 +580,8 @@ async function updateCurrentSongCount(spotifyPlaylistId, newSongCount) {
 
     return tp;
 }
+
+
 module.exports = {
     checkUserRegistration,
     getUserRegistration,
