@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { checkTrackedSpotifyPlaylist, createTrackedPlaylist } = require('../../databaseHelperFunctions.js');
-const { getSpotifyPlaylistDetails, getAllPlaylistTracks } = require('../../spotifyHelperFunctions.js');
+const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../spotifyHelperFunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,11 +29,11 @@ module.exports = {
 
         if (!result) {
             const playlistDetails = await getSpotifyPlaylistDetails(playlistID);
-            const tracks = await getAllPlaylistTracks(playlistDetails.id);
+            const items = await getAllPlaylistitems(playlistDetails.id);
 
             playlistID = playlistDetails.id;
 
-            createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? 0 : tracks.length);
+            createTrackedPlaylist(playlistID, interaction.channelId, postAllTracks ? 0 : items.length);
 
             embed.setColor(0x1db954);
             embed.setTitle(`Now tracking ${response.name}`);
@@ -43,7 +43,7 @@ module.exports = {
                 embed.setThumbnail(`${response.images[0].url}`);
             }
 
-            embed.setDescription(`There are currently ${response.tracks.total} tracks in the playlist.`);
+            embed.setDescription(`There are currently ${response.items.total} tracks in the playlist.`);
         }
         else {
             embed.setColor(0xFFFF00);

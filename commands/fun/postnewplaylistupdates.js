@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('@discordjs/builders');
 const fs = require('fs');
 const { getAllTrackedPlaylists, updateCurrentSongCount } = require('../../databaseHelperFunctions.js');
-const { getSpotifyPlaylistDetails, getAllPlaylistTracks } = require('../../spotifyHelperFunctions.js');
+const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../spotifyHelperFunctions.js');
 const { TrackedSongs } = require ('../../dbObjects.js');
 
 async function PostNewPlaylistUpdates(client) {
@@ -15,11 +15,11 @@ async function PostNewPlaylistUpdates(client) {
 
         const playlistDetails = await getSpotifyPlaylistDetails(playlist.spotifyPlaylistId);
 
-        const tracks = await getAllPlaylistTracks(playlistDetails.id);
+        const items = await getAllPlaylistitems(playlistDetails.id);
 
         const channel = await client.channels.cache.get(`${playlist.discordChannelId}`);
 
-        for (const track of tracks) {
+        for (const track of items) {
             if (!track.track) {
                 continue;
             }
@@ -93,7 +93,7 @@ async function PostNewPlaylistUpdates(client) {
             await channel.send({ embeds: [embed] });
         }
 
-        await updateCurrentSongCount(playlist.spotifyPlaylistId, tracks.length);
+        await updateCurrentSongCount(playlist.spotifyPlaylistId, items.length);
     }
 }
 

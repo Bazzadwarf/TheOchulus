@@ -13,15 +13,15 @@ async function getSpotifyPlaylistDetails(spotifyPlaylistId) {
     return response;
 }
 
-async function getAllPlaylistTracks(spotifyPlaylistId) {
-    let allTracks = [];
+async function getAllPlaylistitems(spotifyPlaylistId) {
+    let allitems = [];
     let offset = 0;
     const limit = 100;
     let total = 0;
 
     do {
         await fetch(
-            `https://api.spotify.com/v1/playlists/${spotifyPlaylistId}/tracks?limit=${limit}&offset=${offset}`,
+            `https://api.spotify.com/v1/playlists/${spotifyPlaylistId}/items?limit=${limit}&offset=${offset}`,
             {
                 method: 'GET',
                 headers: {
@@ -31,19 +31,19 @@ async function getAllPlaylistTracks(spotifyPlaylistId) {
         )
         .then(response => response.json())
         .then(response => {
-            allTracks = allTracks.concat(response.items);
+            allitems = allitems.concat(response.items);
             total = response.total;
             offset += limit;
         })
         .catch(err => {
                 console.log(err);
         });
-    } while (allTracks.length < total);
+    } while (allitems.length < total);
 
-    return allTracks;
+    return allitems;
 }
 
 module.exports = {
     getSpotifyPlaylistDetails,
-    getAllPlaylistTracks,
+    getAllPlaylistitems,
 };
