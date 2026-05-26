@@ -42,8 +42,11 @@ module.exports = {
         if (!res[0]) return interaction.editReply({ content: 'No game found for the options supplied.', ephemeral: true });
 
         const game = res[0];
-        const release_date = game.first_release_date;
-        if (!release_date || (release_date * 1000) > Date.now()) return interaction.editReply({ content: `${game.name} is not yet released.`, ephemeral: true });
+        
+        if (!gameid) {
+            const release_date = game.first_release_date;
+            if (!release_date || (release_date * 1000) > Date.now()) return interaction.editReply({ content: `${game.name} is not yet released.`, ephemeral: true });
+        }
 
         const gameDatabaseEntry = await checkGameStorage(game);
 

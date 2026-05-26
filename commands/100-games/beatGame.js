@@ -38,15 +38,18 @@ module.exports = {
 
         let res = await getGameJson(body);
         if (!gameid) {
-            res = res.filter(entry => entry.game_type == 0);
+            res = res.filter(entry => entry.game_type === 0 || entry.game_type === undefined);
+            res.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
         }
-        res.sort((a, b) => parseInt(b.total_rating_count) - parseInt(a.total_rating_count));
 
         if (!res[0]) return interaction.editReply({ content: 'No game found for the options supplied.', ephemeral: true });
 
         const game = res[0];
-        const release_date = game.first_release_date;
-        if (!release_date || (release_date * 1000) > Date.now()) return interaction.editReply({ content: `${game.name} is not yet released.`, ephemeral: true });
+
+        if (!gameid) {
+            const release_date = game.first_release_date;
+            if (!release_date || (release_date * 1000) > Date.now()) return interaction.editReply({ content: `${game.name} is not yet released.`, ephemeral: true });
+        }
 
         const gameDatabaseEntry = await checkGameStorage(game);
 
