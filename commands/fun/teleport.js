@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const axios = require('axios');
+const { googleplacesapikey } = require('../../config.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,7 +20,7 @@ module.exports = {
         {
             latitude = (Math.random() * 180) - 90;
             longitude = (Math.random() * 360) - 180;
-            url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=50000&key=${process.env.googleplacesapikey}`;
+            url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=50000&key=${googleplacesapikey}`;
             response = await axios.get(url);
             data = response.data;
         } while (data.results.length == 0);
@@ -31,7 +32,7 @@ module.exports = {
 
             const mapsLink = `https://www.google.com/maps/search/${encodeURIComponent(placeName)}`;
 
-            const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${process.env.googleplacesapikey}`;
+            const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${googleplacesapikey}`;
             const detailsResponse = await axios.get(detailsUrl);
             const fullAddress = detailsResponse.data.result.formatted_address;
             const phoneNumber = detailsResponse.data.result.formatted_phone_number || 'No phone number available';
@@ -54,7 +55,7 @@ module.exports = {
             if (randomPlace.photos)
             {
                 const photoReference = randomPlace.photos[0].photo_reference;
-                embed.setThumbnail(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photoreference=${photoReference}&key=${process.env.googleplacesapikey}`);
+                embed.setThumbnail(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=1600&photoreference=${photoReference}&key=${googleplacesapikey}`);
             }
 
             embed.setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() });

@@ -3,9 +3,10 @@ const fs = require('fs');
 const { getAllTrackedPlaylists, updateCurrentSongCount } = require('../../databaseHelperFunctions.js');
 const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../spotifyHelperFunctions.js');
 const { TrackedSongs } = require ('../../dbObjects.js');
+const { spotifyAccessToken } = require('../../config.js');
 
 async function PostNewPlaylistUpdates(client) {
-    if (!process.env.spotifyAccessToken) {
+    if (!spotifyAccessToken) {
         return;
     }
 
@@ -58,7 +59,7 @@ async function PostNewPlaylistUpdates(client) {
                     {
                         method: 'GET',
                         headers: {
-                            'Authorization': `Bearer ${process.env.spotifyAccessToken}`,
+                            'Authorization': `Bearer ${spotifyAccessToken}`,
                         },
                     },
                 )

@@ -1,3 +1,6 @@
+const { spotifyClientId, spotifyClientSecret } = require('./config.js');
+let { spotifyAccessToken } = require('./config.js');
+
 class Spotify {
     constructor() {
         // make a new token every hour
@@ -14,7 +17,7 @@ class Spotify {
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Basic ' + (new Buffer.from(process.env.spotifyClientId + ':' + process.env.spotifyClientSecret).toString('base64')),
+                    'Authorization': 'Basic ' + (new Buffer.from(spotifyClientId + ':' + spotifyClientSecret).toString('base64')),
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
@@ -29,7 +32,7 @@ class Spotify {
             return;
         }
 
-        process.env.spotifyAccessToken = data.access_token;
+        spotifyAccessToken = data.access_token;
     }
 }
 

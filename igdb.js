@@ -1,3 +1,6 @@
+const { igdbClientId, igdbClientSecret } = require('./config.js');
+let { igdbAccessToken } = require('./config.js');
+
 class igdb {
     constructor() {
         // make a new token every day
@@ -11,7 +14,7 @@ class igdb {
     console.log('Making a token');
 
     fetch(
-        `https://id.twitch.tv/oauth2/token?client_id=${process.env.igdbClientId}&client_secret=${process.env.igdbClientSecret}&grant_type=client_credentials`,
+        `https://id.twitch.tv/oauth2/token?client_id=${igdbClientId}&client_secret=${igdbClientSecret}&grant_type=client_credentials`,
         {
             method: 'POST',
         },
@@ -22,7 +25,7 @@ class igdb {
             console.log('Failed with ', resp.status, resp.body);
             return;
         }
-        process.env.igdbAccessToken = resp.body.access_token;
+        igdbAccessToken = resp.body.access_token;
     })
     .catch(err => {
         console.error(err);

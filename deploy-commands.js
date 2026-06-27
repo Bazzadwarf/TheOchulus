@@ -1,17 +1,6 @@
 const { REST, Routes } = require('discord.js');
 const { validateEnvVariables } = require('./env.js');
-
-// Check if the .env file exists
-if (!fs.existsSync('.env')) {
-	throw new Error('Missing .env file. Please create one with the necessary environment variables.');
-}
-
-const { config } = require('dotenv');
-config();
-
-
-// Validate required environment variables
-validateEnvVariables(['discordClientId', 'discordGuildId', 'discordToken']);
+const { discordClientId, discordToken, discordGuildId } = require('./config.js');
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -38,7 +27,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(process.env.discordToken);
+const rest = new REST().setToken(discordToken);
 
 // and deploy your commands!
 (async () => {
@@ -47,7 +36,7 @@ const rest = new REST().setToken(process.env.discordToken);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data = await rest.put(
-			Routes.applicationGuildCommands(process.env.discordClientId, process.env.discordGuildId),
+			Routes.applicationGuildCommands(discordClientId, discordGuildId),
 			{ body: commands },
 		);
 
