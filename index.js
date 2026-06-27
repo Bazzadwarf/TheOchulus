@@ -2,9 +2,19 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { validateEnvVariables } = require('./env.js');
 
+// Check if the .env file exists
+if (!fs.existsSync('.env')) {
+	throw new Error('Missing .env file. Please create one with the necessary environment variables.');
+}
+
+// Load environment variables from .env file
 const { config } = require('dotenv');
 config();
+
+// Validate required environment variables
+validateEnvVariables(['discordClientId', 'discordGuildId', 'discordToken', 'igdbClientId', 'igdbClientSecret', 'googleplacesapikey', 'spotifyClientId', 'spotifyClientSecret']);
 
 const { igdb } = require('./igdb.js');
 const { backupDatabase } = require('./databaseHelperFunctions.js');

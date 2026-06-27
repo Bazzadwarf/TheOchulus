@@ -1,6 +1,17 @@
 const { REST, Routes } = require('discord.js');
+const { validateEnvVariables } = require('./env.js');
+
+// Check if the .env file exists
+if (!fs.existsSync('.env')) {
+	throw new Error('Missing .env file. Please create one with the necessary environment variables.');
+}
+
 const { config } = require('dotenv');
 config();
+
+
+// Validate required environment variables
+validateEnvVariables(['discordClientId', 'discordGuildId', 'discordToken']);
 
 const fs = require('node:fs');
 const path = require('node:path');
