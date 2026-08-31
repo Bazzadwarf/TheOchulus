@@ -1,5 +1,5 @@
 const { igdbClientId, igdbClientSecret } = require('./config.js');
-let { igdbAccessToken } = require('./config.js');
+const config = require('./config.js');
 
 class igdb {
     constructor() {
@@ -25,7 +25,7 @@ class igdb {
             console.log('Failed with ', resp.status, resp.body);
             return;
         }
-        igdbAccessToken = resp.body.access_token;
+        config.igdbAccessToken = resp.body.access_token;
     })
     .catch(err => {
         console.error(err);

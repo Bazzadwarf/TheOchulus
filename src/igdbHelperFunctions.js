@@ -1,4 +1,4 @@
-const { igdbClientId, igdbAccessToken } = require('./config.js');
+const config = require('./config.js');
 
 async function getCoverURL(id) {
     let url = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
@@ -8,8 +8,8 @@ async function getCoverURL(id) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = ${id}; fields url;`,
         })
@@ -34,8 +34,8 @@ async function getPlatformID(platform) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where name = "${platform}", alternative_name = "${platform}"; fields id;`,
       })
@@ -56,8 +56,8 @@ async function getGameJson(body) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: body,
         })
@@ -82,8 +82,8 @@ async function getReleaseDates(id) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = ${id}; fields category,checksum,created_at,date,game,human,m,platform,region,status,updated_at,y;`,
       })
@@ -106,8 +106,8 @@ async function getInvolvedCompanies(ids) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = (${ids}); fields *; limit ${ids.length};`,
         })
@@ -130,8 +130,8 @@ async function getCompanies(ids) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = (${ids}); fields *; limit ${ids.length};`,
         })
@@ -155,8 +155,8 @@ async function getCompanyInfo(id) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = ${id}; fields *;`,
         })
@@ -175,8 +175,8 @@ async function getCompanyInfo(id) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = ${involved_company.company}; fields *;`,
         })
@@ -199,8 +199,8 @@ async function getGenres(id) {
         { method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
           },
           body: `where id = (${id}); fields *; limit ${id.length};`,
       })
@@ -224,8 +224,8 @@ async function getFranchise(id) {
         { method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
         },
         body: `where id = ${id}; fields *;`,
     })
@@ -249,8 +249,8 @@ async function getTimeToBeat(id) {
         { method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
         },
         body: `where game_id = ${id}; fields *;`,
     })
@@ -273,8 +273,8 @@ async function getTimesToBeat(body) {
         { method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Client-ID': `${igdbClientId}`,
-            'Authorization': `Bearer ${igdbAccessToken}`,
+            'Client-ID': `${config.igdbClientId}`,
+            'Authorization': `Bearer ${config.igdbAccessToken}`,
         },
         body: body,
     })

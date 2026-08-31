@@ -2,9 +2,13 @@
   "name": "theochulus",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy-commands": "node src/deploy-commands.js",
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "npm update"
   },
   "type": "commonjs",
   "author": "",
