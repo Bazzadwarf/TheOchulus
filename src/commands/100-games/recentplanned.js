@@ -33,7 +33,7 @@ module.exports = {
         const playNum = await getPlayingGameCount(userDatabaseEntry);
 
         const embed = new EmbedBuilder()
-            .setColor(0xFFD700)
+            .setColor(0x43ABEC)
             .setAuthor({ name: `${user.displayName}'s most recent planned game`, iconURL: user.avatarURL() })
             .setTitle(game.name)
             .setURL(game.url)
