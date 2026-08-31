@@ -47,8 +47,6 @@ module.exports = {
             }
         }
 
-        console.log(changelogEntries);
-
         const embed = new EmbedBuilder()
         .setColor(0x6441a5)
         .setThumbnail(user.avatarURL())
