@@ -1,4 +1,4 @@
-const { spotifyAccessToken } = require('./config.js');
+const config = require('./config.js');
 
 async function getSpotifyPlaylistDetails(spotifyPlaylistId) {
     const response = await fetch(
@@ -6,7 +6,7 @@ async function getSpotifyPlaylistDetails(spotifyPlaylistId) {
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${spotifyAccessToken}`,
+                    'Authorization': `Bearer ${config.spotifyAccessToken}`,
                 },
             },
         )
@@ -27,7 +27,7 @@ async function getAllPlaylistitems(spotifyPlaylistId) {
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${spotifyAccessToken}`,
+                    'Authorization': `Bearer ${config.spotifyAccessToken}`,
                 },
             },
         )

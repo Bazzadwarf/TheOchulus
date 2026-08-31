@@ -1,6 +1,6 @@
 const { REST, Routes } = require('discord.js');
 const { validateEnvVariables } = require('./env.js');
-const { discordClientId, discordToken, discordGuildId } = require('./config.js');
+const config = require('./config.js');
 
 const fs = require('node:fs');
 const path = require('node:path');
@@ -27,7 +27,7 @@ for (const folder of commandFolders) {
 }
 
 // Construct and prepare an instance of the REST module
-const rest = new REST().setToken(discordToken);
+const rest = new REST().setToken(config.discordToken);
 
 // and deploy your commands!
 (async () => {
@@ -36,7 +36,7 @@ const rest = new REST().setToken(discordToken);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const data = await rest.put(
-			Routes.applicationGuildCommands(discordClientId, discordGuildId),
+			Routes.applicationGuildCommands(config.discordClientId, config.discordGuildId),
 			{ body: commands },
 		);
 

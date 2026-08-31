@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { checkTrackedSpotifyPlaylist, createTrackedPlaylist } = require('../../databaseHelperFunctions.js');
 const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../spotifyHelperFunctions.js');
 const { TrackedSongs } = require ('../../dbObjects.js');
-const { spotifyAccessToken } = require('../../config.js');
+const config = require('../../config.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -90,7 +90,7 @@ module.exports = {
                             {
                                 method: 'GET',
                                 headers: {
-                                    'Authorization': `Bearer ${spotifyAccessToken}`,
+                                    'Authorization': `Bearer ${config.spotifyAccessToken}`,
                                 },
                             },
                         )

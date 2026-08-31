@@ -1,4 +1,3 @@
-const { igdbClientId, igdbClientSecret } = require('./config.js');
 const config = require('./config.js');
 
 class igdb {
@@ -14,7 +13,7 @@ class igdb {
     console.log('Making a token');
 
     fetch(
-        `https://id.twitch.tv/oauth2/token?client_id=${igdbClientId}&client_secret=${igdbClientSecret}&grant_type=client_credentials`,
+        `https://id.twitch.tv/oauth2/token?client_id=${config.igdbClientId}&client_secret=${config.igdbClientSecret}&grant_type=client_credentials`,
         {
             method: 'POST',
         },

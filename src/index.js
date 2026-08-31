@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { discordToken } = require('./config.js');
+const config = require('./config.js');
 
 const { igdb } = require('./igdb.js');
 const { backupDatabase } = require('./databaseHelperFunctions.js');
@@ -51,7 +51,7 @@ for (const file of eventFiles) {
 	}
 }
 
-client.login(discordToken);
+client.login(config.discordToken);
 
 client.once(Events.ClientReady, () => {
 	console.log(`Logged in as ${client.user.tag}!`);

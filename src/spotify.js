@@ -1,5 +1,4 @@
-const { spotifyClientId, spotifyClientSecret } = require('./config.js');
-let { spotifyAccessToken } = require('./config.js');
+const config = require('./config.js');
 
 class Spotify {
     constructor() {
@@ -17,7 +16,7 @@ class Spotify {
             {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Basic ' + (new Buffer.from(spotifyClientId + ':' + spotifyClientSecret).toString('base64')),
+                    'Authorization': 'Basic ' + (new Buffer.from(config.spotifyClientId + ':' + config.spotifyClientSecret).toString('base64')),
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
@@ -32,7 +31,7 @@ class Spotify {
             return;
         }
 
-        spotifyAccessToken = data.access_token;
+        config.spotifyAccessToken = data.access_token;
     }
 }
 
