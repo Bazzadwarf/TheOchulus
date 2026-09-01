@@ -4,8 +4,9 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "deploy-commands": "node src/deploy-commands.js",
+    "deploy-commands": "node src/scripts/deploy-commands.js",
     "dev": "node src/index.js",
+    "initialize-database":"node src/scripts/dbInit.js",
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update": "npm update"
