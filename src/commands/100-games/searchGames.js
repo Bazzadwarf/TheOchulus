@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getGameJson } = require('../../igdbHelperFunctions.js');
+const { getGameJson } = require('../../helpers/igdb.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()

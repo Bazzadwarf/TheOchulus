@@ -1,4 +1,4 @@
-const config = require('./config.js');
+const config = require('../config.js');
 
 async function getCoverURL(id) {
     let url = 'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';

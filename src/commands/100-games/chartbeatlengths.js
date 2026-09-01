@@ -2,8 +2,8 @@ const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const ChartDataLabels = require('chartjs-plugin-datalabels');
 const fs = require('fs');
-const { getUserRegistration, getBeatenGamesForYear, checkGameStorageId } = require('../../databaseHelperFunctions.js');
-const { getGameJson, getTimesToBeat } = require('../../igdbHelperFunctions.js');
+const { getUserRegistration, getBeatenGamesForYear, checkGameStorageId } = require('../../helpers/database.js');
+const { getGameJson, getTimesToBeat } = require('../../helpers/igdb.js');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {

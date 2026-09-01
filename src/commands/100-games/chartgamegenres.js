@@ -1,8 +1,8 @@
 const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const fs = require('fs');
-const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../databaseHelperFunctions.js');
-const { getGameJson, getGenres } = require('../../igdbHelperFunctions.js');
+const { getUserRegistration, getBeatenGames, checkGameStorageId } = require('../../helpers/database.js');
+const { getGameJson, getGenres } = require('../../helpers/igdb.js');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {

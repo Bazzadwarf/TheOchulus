@@ -1,4 +1,4 @@
-const { Users, Games, LoggedGames, Changelog, TrackedPlaylists, TrackedSongs } = require ('./dbObjects.js');
+const { Users, Games, LoggedGames, Changelog, TrackedPlaylists, TrackedSongs } = require ('../dbObjects.js');
 const fs = require('fs');
 const { Op } = require('sequelize');
 

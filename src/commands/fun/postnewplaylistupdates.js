@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require('@discordjs/builders');
 const fs = require('fs');
-const { getAllTrackedPlaylists, updateCurrentSongCount } = require('../../databaseHelperFunctions.js');
-const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../spotifyHelperFunctions.js');
+const { getAllTrackedPlaylists, updateCurrentSongCount } = require('../../helpers/database.js');
+const { getSpotifyPlaylistDetails, getAllPlaylistitems } = require('../../helpers/spotify.js');
 const { TrackedSongs } = require ('../../dbObjects.js');
 const config = require('../../config.js');
 

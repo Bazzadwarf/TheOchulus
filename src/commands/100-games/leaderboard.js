@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getLeaderboardEntries, getLeaderboardEntriesBetweenDates } = require('../../databaseHelperFunctions.js');
+const { getLeaderboardEntries, getLeaderboardEntriesBetweenDates } = require('../../helpers/database.js');
 
 
 module.exports = {

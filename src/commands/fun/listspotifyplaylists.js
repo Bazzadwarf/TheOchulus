@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getAllTrackedPlaylists } = require('../../databaseHelperFunctions.js');
-const { getSpotifyPlaylistDetails } = require('../../spotifyHelperFunctions.js');
+const { getAllTrackedPlaylists } = require('../../helpers/database.js');
+const { getSpotifyPlaylistDetails } = require('../../helpers/spotify.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
