@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../helpers/igdb.js');
-const { getUserRegistration, getRecentPlanningGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../helpers/database.js');
+const { getUserRegistration, getRecentPlanningGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../helpers/database');
 
 module.exports = {
     data: new SlashCommandBuilder()

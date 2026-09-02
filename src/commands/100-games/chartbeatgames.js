@@ -1,7 +1,7 @@
 const { createCanvas } = require('canvas');
 const { Chart } = require('chart.js/auto');
 const fs = require('fs');
-const { getUserRegistration, getBeatenGamesForYear } = require('../../helpers/database.js');
+const { getUserRegistration, getBeatenGamesForYear } = require('../../helpers/database');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {

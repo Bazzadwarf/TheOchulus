@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getAllChangelog, checkGameStorageId, getUserFromId } = require('../../helpers/database.js');
+const { getAllChangelog, checkGameStorageId, getUserFromId } = require('../../helpers/database');
 
 module.exports = {
 	data: new SlashCommandBuilder()

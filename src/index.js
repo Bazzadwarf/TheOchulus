@@ -5,7 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const config = require('./config.js');
 
 const { igdb } = require('./igdb.js');
-const { backupDatabase } = require('./helpers/database.js');
+const { backupDatabase } = require('./helpers/database');
 new igdb();
 
 const { Spotify } = require('./spotify.js');
