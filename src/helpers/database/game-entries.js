@@ -2,16 +2,16 @@ const { createChangelogEntry, checkLoggedGameEntry, createLoggedGameEntry } = re
 const { Users, Games, LoggedGames, Changelog } = require ('../../dbObjects');
 const { Op } = require('sequelize');
 
-async function createPlanningGameEntry(user, game, date) {
-    const entry = await checkLoggedGameEntry(user, game);
+async function createGameEntry(user, game, status, date) {
+   const entry = await checkLoggedGameEntry(user, game);
 
-    if (!entry) return await createLoggedGameEntry(user, game, 'planning', date);
+    if (!entry) return await createLoggedGameEntry(user, game, status, date);
 
-    if (entry.status == 'planning') return false;
+    if (entry.status == status) return false;
 
-    await createChangelogEntry(user, game, entry.status, 'planning');
+    await createChangelogEntry(user, game, entry.status, status);
 
-    entry.status = 'planning';
+    entry.status = status;
 
     if (!date) {
         entry.statusLastChanged = new Date();
@@ -23,52 +23,19 @@ async function createPlanningGameEntry(user, game, date) {
     await entry.save();
 
     return entry;
+
+}
+
+async function createPlanningGameEntry(user, game, date) {
+    return createGameEntry(user, game, 'planning', date);
 }
 
 async function createPlayingGameEntry(user, game, date) {
-    const entry = await checkLoggedGameEntry(user, game);
-
-    if (!entry) return await createLoggedGameEntry(user, game, 'playing', date);
-
-    if (entry.status == 'playing') return false;
-
-    await createChangelogEntry(user, game, entry.status, 'playing');
-
-    entry.status = 'playing';
-
-    if (!date) {
-        entry.statusLastChanged = new Date();
-    }
-    else {
-        entry.statusLastChanged = date;
-    }
-
-    await entry.save();
-
-    return entry;
+    return createGameEntry(user, game, 'playing', date);
 }
 
 async function createBeatenGameEntry(user, game, date) {
-    const entry = await checkLoggedGameEntry(user, game);
-
-    if (!entry) return await createLoggedGameEntry(user, game, 'beat', date);
-
-    if (entry.status == 'beat') return false;
-
-    await createChangelogEntry(user, game, entry.status, 'beat');
-
-    entry.status = 'beat';
-
-    if (!date) {
-        entry.statusLastChanged = new Date();
-    }
-    else {
-        entry.statusLastChanged = date;
-    }
-
-    await entry.save();
-
-    return entry;
+    return createGameEntry(user, game, 'beat', date);
 }
 
 async function getPlanningGameCount(user) {
