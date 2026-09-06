@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getAllChangelog, checkGameStorageId, getUserFromId } = require('../../helpers/database');
+const { GAME_STATUS } = require('../../helpers/gameStatus.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,11 +16,11 @@ module.exports = {
             const game = await checkGameStorageId(changelogEntries[i].gameId);
             const user = await getUserFromId(changelogEntries[i].userId);
 
-            if (changelogEntries[i].newStatus == 'planning') {
+            if (changelogEntries[i].newStatus == GAME_STATUS.PLANNING) {
                 newDesc = `:pencil: *${user.username}* planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
-            } else if (changelogEntries[i].newStatus == 'playing') {
+            } else if (changelogEntries[i].newStatus == GAME_STATUS.PLAYING) {
                 newDesc = `:video_game: *${user.username}* started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
-            } else if (changelogEntries[i].newStatus == 'beat') {
+            } else if (changelogEntries[i].newStatus == GAME_STATUS.BEAT) {
                 newDesc = `:white_check_mark: *${user.username}* beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             } else if (!changelogEntries[i].newStatus) {
                 newDesc = `:x: *${user.username}* deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;

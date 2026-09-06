@@ -1,6 +1,7 @@
 const { createChangelogEntry, checkLoggedGameEntry, createLoggedGameEntry } = require('./changelog.js');
 const { Users, Games, LoggedGames, Changelog } = require ('../../dbObjects');
 const { Op } = require('sequelize');
+const { GAME_STATUS } = require('../gameStatus.js');
 
 async function createGameEntry(user, game, status, date) {
    const entry = await checkLoggedGameEntry(user, game);
@@ -27,27 +28,27 @@ async function createGameEntry(user, game, status, date) {
 }
 
 async function createPlanningGameEntry(user, game, date) {
-    return createGameEntry(user, game, 'planning', date);
+    return createGameEntry(user, game, GAME_STATUS.PLANNING, date);
 }
 
 async function createPlayingGameEntry(user, game, date) {
-    return createGameEntry(user, game, 'playing', date);
+    return createGameEntry(user, game, GAME_STATUS.PLAYING, date);
 }
 
 async function createBeatenGameEntry(user, game, date) {
-    return createGameEntry(user, game, 'beat', date);
+    return createGameEntry(user, game, GAME_STATUS.BEAT, date);
 }
 
 async function getPlanningGameCount(user) {
-    return await getLoggedGameCount(user, 'planning');
+    return await getLoggedGameCount(user, GAME_STATUS.PLANNING);
 }
 
 async function getPlayingGameCount(user) {
-    return await getLoggedGameCount(user, 'playing');
+    return await getLoggedGameCount(user, GAME_STATUS.PLAYING);
 }
 
 async function getBeatenGameCount(user) {
-    return await getLoggedGameCount(user, 'beat');
+    return await getLoggedGameCount(user, GAME_STATUS.BEAT);
 }
 
 async function getLoggedGameCount(user, status) {
@@ -64,15 +65,15 @@ async function getLoggedGameCount(user, status) {
 }
 
 async function deletePlanningGameId(id, user) {
-    return await deleteLoggedGameId(id, user, 'planning');
+    return await deleteLoggedGameId(id, user, GAME_STATUS.PLANNING);
 }
 
 async function deletePlayingGameId(id, user) {
-    return await deleteLoggedGameId(id, user, 'playing');
+    return await deleteLoggedGameId(id, user, GAME_STATUS.PLAYING);
 }
 
 async function deleteBeatenGameId(id, user) {
-    return await deleteLoggedGameId(id, user, 'beat');
+    return await deleteLoggedGameId(id, user, GAME_STATUS.BEAT);
 }
 
 async function deleteLoggedGameId(id, user, status) {
@@ -97,15 +98,15 @@ async function deleteLoggedGameId(id, user, status) {
 }
 
 async function deletePlanningGameNum(num, user) {
-    return await deleteLoggedGameNum(num, user, 'planning');
+    return await deleteLoggedGameNum(num, user, GAME_STATUS.PLANNING);
 }
 
 async function deletePlayingGameNum(num, user) {
-    return await deleteLoggedGameNum(num, user, 'playing');
+    return await deleteLoggedGameNum(num, user, GAME_STATUS.PLAYING);
 }
 
 async function deleteBeatenGameNum(num, user) {
-    return await deleteLoggedGameNum(num, user, 'beat');
+    return await deleteLoggedGameNum(num, user, GAME_STATUS.BEAT);
 }
 
 async function deleteLoggedGameNum(num, user, status) {
@@ -132,15 +133,15 @@ async function deleteLoggedGameNum(num, user, status) {
 }
 
 async function getRecentPlanningGameEntry(userId) {
-    return await getRecentGameEntry(userId, 'planning');
+    return await getRecentGameEntry(userId, GAME_STATUS.PLANNING);
 }
 
 async function getRecentPlayingGameEntry(userId) {
-    return await getRecentGameEntry(userId, 'playing');
+    return await getRecentGameEntry(userId, GAME_STATUS.PLAYING);
 }
 
 async function getRecentBeatenGameEntry(userId) {
-    return await getRecentGameEntry(userId, 'beat');
+    return await getRecentGameEntry(userId, GAME_STATUS.BEAT);
 }
 
 async function getRecentGameEntry(userId, status) {
@@ -173,15 +174,15 @@ async function getRecentEntry(userId) {
 }
 
 async function getPlanningGames(id) {
-    return await getGames(id, 'planning');
+    return await getGames(id, GAME_STATUS.PLANNING);
 }
 
 async function getPlayingGames(id) {
-    return await getGames(id, 'playing');
+    return await getGames(id, GAME_STATUS.PLAYING);
 }
 
 async function getBeatenGames(id) {
-    return await getGames(id, 'beat');
+    return await getGames(id, GAME_STATUS.BEAT);
 }
 
 async function getGames(id, status) {
@@ -199,7 +200,7 @@ async function getBeatenGamesForYear(userId, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const gameEntries = await LoggedGames.findAll({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'statusLastChanged', 'ASC' ]] })
+    const gameEntries = await LoggedGames.findAll({ where: { userId: userId, status: GAME_STATUS.BEAT, statusLastChanged: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -210,7 +211,7 @@ async function getBeatenGamesForYear(userId, start, end) {
 }
 
 async function getAllBeatenGames() {
-    const gameEntries = await LoggedGames.findAll({ where: { status: 'beat' }, order: [ [ 'statusLastChanged', 'ASC' ]] })
+    const gameEntries = await LoggedGames.findAll({ where: { status: GAME_STATUS.BEAT }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -224,7 +225,7 @@ async function getAllBeatenGamesBetweenDates(start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const gameEntries = await LoggedGames.findAll({ where: { status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'statusLastChanged', 'ASC' ]] })
+    const gameEntries = await LoggedGames.findAll({ where: { status: GAME_STATUS.BEAT, statusLastChanged: { [ Op.between ]: [startDate, endDate] } }, order: [ [ 'statusLastChanged', 'ASC' ]] })
     .catch((err) => {
         console.log(err);
     });
@@ -238,7 +239,7 @@ async function getBeatenGameCountYear(userId, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const count = await LoggedGames.count({ where: { userId: userId, status: 'beat', statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
+    const count = await LoggedGames.count({ where: { userId: userId, status: GAME_STATUS.BEAT, statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
     .catch((err) => {
         console.log(err);
     });

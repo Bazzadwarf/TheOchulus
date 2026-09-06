@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getUserRegistration, getChangelog, checkGameStorageId } = require('../../helpers/database');
+const { GAME_STATUS } = require('../../helpers/gameStatus.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,11 +30,11 @@ module.exports = {
             let newDesc = '';
             const game = await checkGameStorageId(changelogEntries[i].gameId);
 
-            if (changelogEntries[i].newStatus == 'planning') {
+            if (changelogEntries[i].newStatus == GAME_STATUS.PLANNING) {
                 newDesc = `:pencil: planned **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
-            } else if (changelogEntries[i].newStatus == 'playing') {
+            } else if (changelogEntries[i].newStatus == GAME_STATUS.PLAYING) {
                 newDesc = `:video_game: started playing **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
-            } else if (changelogEntries[i].newStatus == 'beat') {
+            } else if (changelogEntries[i].newStatus == GAME_STATUS.BEAT) {
                 newDesc = `:white_check_mark: beat **${game.name}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
             } else if (!changelogEntries[i].newStatus) {
                 newDesc = `:x: deleted **${game.name}** from **${changelogEntries[i].oldStatus}** *(${changelogEntries[i].createdAt.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })})*\n`;
