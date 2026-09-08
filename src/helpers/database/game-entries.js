@@ -235,7 +235,7 @@ async function getAllBeatenGamesBetweenDates(start, end) {
     return false;
 }
 
-async function getBeatenGameCountYear(userId, start, end) {
+async function getBeatenGameCountBetweenDates(userId, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
@@ -274,5 +274,5 @@ module.exports = {
     getBeatenGamesForYear,
     getAllBeatenGames,
     getAllBeatenGamesBetweenDates,
-    getBeatenGameCountYear
+    getBeatenGameCountBetweenDates
 };
