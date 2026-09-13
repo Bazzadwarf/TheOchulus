@@ -8,17 +8,6 @@ async function createChangelogEntry(user, game, oldStatus, newStatus) {
     });
 }
 
-async function checkLoggedGameEntry(user, game) {
-    const bg = await LoggedGames.findOne({ where: { userId: user.id, gameId: game.id } })
-    .catch((err) => {
-        console.log(err);
-    });
-
-    if (!bg) return false;
-
-    return bg;
-}
-
 async function createLoggedGameEntry(user, game, status, date) {
     let bg;
 
@@ -66,7 +55,6 @@ async function getAllChangelog() {
 
 module.exports = {
     createChangelogEntry,
-    checkLoggedGameEntry,
     createLoggedGameEntry,
     getChangelog,
     getAllChangelog

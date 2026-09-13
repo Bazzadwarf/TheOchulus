@@ -20,7 +20,7 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
-        const gameDatabaseEntry = await getRecentBeatenGameEntry(userDatabaseEntry.id);
+        const gameDatabaseEntry = await getRecentBeatenGameEntry(userDatabaseEntry);
         if (!gameDatabaseEntry) return interaction.editReply({ content: 'No game found.', ephemeral: true });
 
         const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;

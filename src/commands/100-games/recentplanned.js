@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getCoverURL, getGameJson } = require('../../helpers/igdb.js');
-const { getUserRegistration, getRecentPlanningGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../helpers/database');
+const { getUserRegistration, getRecentPlanningGameEntry, getRecentPlanningLoggedGameEntry, getBeatenGameCount, getPlanningGameCount, getPlayingGameCount } = require('../../helpers/database');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,7 +20,10 @@ module.exports = {
         const userDatabaseEntry = await getUserRegistration(user);
         if (!userDatabaseEntry) return interaction.editReply({ content: `Issue checking registration with "${interaction.user.username}".`, ephemeral: true });
 
-        const gameDatabaseEntry = await getRecentPlanningGameEntry(userDatabaseEntry.id);
+        const loggedGameEntry = await getRecentPlanningLoggedGameEntry(userDatabaseEntry);
+        if (!loggedGameEntry) return interaction.editReply({ content: 'No game found.', ephemeral: true });
+
+        const gameDatabaseEntry = await getRecentPlanningGameEntry(userDatabaseEntry);
         if (!gameDatabaseEntry) return interaction.editReply({ content: 'No game found.', ephemeral: true });
 
         const body = `where id = ${ gameDatabaseEntry.igdb_id }; fields *;`;
@@ -38,7 +41,7 @@ module.exports = {
             .setTitle(game.name)
             .setURL(game.url)
             .setFooter({ text: 'The Ochulus • 100 Games Challenge', iconURL: interaction.client.user.avatarURL() })
-            .setTimestamp();
+            .setTimestamp(loggedGameEntry.statusLastChanged);
 
         if (game.cover) {
             const coverUrl = await getCoverURL(game.cover);

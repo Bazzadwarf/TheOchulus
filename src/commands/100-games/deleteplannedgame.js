@@ -46,7 +46,7 @@ module.exports = {
             result = await deletePlanningGameNum(beatGameNumber, userDatabaseEntry);
         }
         else {
-            const recentGame = await getRecentPlanningGameEntry(userDatabaseEntry.id);
+            const recentGame = await getRecentPlanningGameEntry(userDatabaseEntry);
             result = await deletePlanningGameId(recentGame.id, userDatabaseEntry);
         }
 

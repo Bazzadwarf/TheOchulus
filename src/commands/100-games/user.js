@@ -22,9 +22,9 @@ module.exports = {
         const planNum = await getPlanningGameCount(userDatabaseEntry);
         const playNum = await getPlayingGameCount(userDatabaseEntry);
         const beatNum = await getBeatenGameCount(userDatabaseEntry);
-        const gameDatabaseEntry = await getRecentBeatenGameEntry(userDatabaseEntry.id);
+        const gameDatabaseEntry = await getRecentBeatenGameEntry(userDatabaseEntry);
         const beatenGamesDatabaseEntries = await getBeatenGames(userDatabaseEntry.id);
-        const recentEntry = await getRecentEntry(userDatabaseEntry.id);
+        const recentEntry = await getRecentEntry(userDatabaseEntry);
 
         const embed = new EmbedBuilder();
         embed.setColor(0x6441a5);
