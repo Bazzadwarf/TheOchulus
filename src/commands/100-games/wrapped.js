@@ -170,18 +170,18 @@ async function GetMostActiveMonth(userDatabaseEntry, year) {
 	if (userBeatenGamesDatabaseEntries && userBeatenGamesDatabaseEntries.length > 0) {
 
 		const results = [];
-		results.push(['January', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-01-01`, `${year}-02-01`)]);
-		results.push(['February', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-02-01`, `${year}-03-01`)]);
-		results.push(['March', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-03-01`, `${year}-04-01`)]);
-		results.push(['April', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-04-01`, `${year}-05-01`)]);
-		results.push(['May', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-05-01`, `${year}-06-01`)]);
-		results.push(['June', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-06-01`, `${year}-07-01`)]);
-		results.push(['July', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-07-01`, `${year}-08-01`)]);
-		results.push(['August', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-08-01`, `${year}-09-01`)]);
-		results.push(['September', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-09-01`, `${year}-10-01`)]);
-		results.push(['October', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-10-01`, `${year}-11-01`)]);
-		results.push(['November', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-11-01`, `${year}-12-01`)]);
-		results.push(['December', await getBeatenGameCountBetweenDates(userDatabaseEntry.id, `${year}-12-01`, `${year + 1}-01-01`)]);
+		results.push(['January', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-01-01`, `${year}-02-01`)]);
+		results.push(['February', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-02-01`, `${year}-03-01`)]);
+		results.push(['March', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-03-01`, `${year}-04-01`)]);
+		results.push(['April', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-04-01`, `${year}-05-01`)]);
+		results.push(['May', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-05-01`, `${year}-06-01`)]);
+		results.push(['June', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-06-01`, `${year}-07-01`)]);
+		results.push(['July', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-07-01`, `${year}-08-01`)]);
+		results.push(['August', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-08-01`, `${year}-09-01`)]);
+		results.push(['September', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-09-01`, `${year}-10-01`)]);
+		results.push(['October', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-10-01`, `${year}-11-01`)]);
+		results.push(['November', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-11-01`, `${year}-12-01`)]);
+		results.push(['December', await getBeatenGameCountBetweenDates(userDatabaseEntry, `${year}-12-01`, `${year + 1}-01-01`)]);
 
 		const sorted = Object.entries(results).sort((a, b) => b[1][1] - a[1][1]);
 

@@ -82,17 +82,17 @@ async function getGameCountBetweenDates(user, status, start, end) {
  * Gets the count of LoggedGame entries for a given user and status between two dates.
  *
  * @async
- * @param {number} userId - The ID of the user to get the count for.
+ * @param {Object} user - The user database object for who the LoggedGame count is being checked.
  * @param {GAME_STATUS} status - The status of the LoggedGame entries to count.
  * @param {Date} start - The start date for the date range.
  * @param {Date} end - The end date for the date range.
  * @returns {number} The count of LoggedGame entries matching the criteria.
  */
-async function getGameCountBetweenDates(userId, status, start, end) {
+async function getGameCountBetweenDates(user, status, start, end) {
     const startDate = new Date(start);
     const endDate = new Date(end);
 
-    const count = await LoggedGames.count({ where: { userId: userId, status: status, statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
+    const count = await LoggedGames.count({ where: { userId: user.id, status: status, statusLastChanged: { [ Op.between ]: [startDate, endDate] } } })
     .catch((err) => {
         console.log(err);
     });
@@ -104,39 +104,39 @@ async function getGameCountBetweenDates(userId, status, start, end) {
  * Gets the count of planning LoggedGame entries for a given user and status between two dates.
  *
  * @async
- * @param {number} userId - The ID of the user to get the count for.
+ * @param {Object} user - The user database object for who the LoggedGame count is being checked.
  * @param {Date} start - The start date for the date range.
  * @param {Date} end - The end date for the date range.
  * @returns {number} The count of LoggedGame entries matching the criteria.
  */
-async function getPlanningGameCountBetweenDates(userId, start, end) {
-    return getGameCountBetweenDates(userId, GAME_STATUS.PLANNING, start, end);
+async function getPlanningGameCountBetweenDates(user, start, end) {
+    return getGameCountBetweenDates(user, GAME_STATUS.PLANNING, start, end);
 }
 
 /**
  * Gets the count of playing LoggedGame entries for a given user and status between two dates.
  *
  * @async
- * @param {number} userId - The ID of the user to get the count for.
+ * @param {Object} user - The user database object for who the LoggedGame count is being checked.
  * @param {Date} start - The start date for the date range.
  * @param {Date} end - The end date for the date range.
  * @returns {number} The count of LoggedGame entries matching the criteria.
  */
-async function getPlayingGameCountBetweenDates(userId, start, end) {
-    return getGameCountBetweenDates(userId, GAME_STATUS.PLAYING, start, end);
+async function getPlayingGameCountBetweenDates(user, start, end) {
+    return getGameCountBetweenDates(user, GAME_STATUS.PLAYING, start, end);
 }
 
 /**
  * Gets the count of beaten LoggedGame entries for a given user and status between two dates.
  *
  * @async
- * @param {number} userId - The ID of the user to get the count for.
+ * @param {Object} user - The user database object for who the LoggedGame count is being checked.
  * @param {Date} start - The start date for the date range.
  * @param {Date} end - The end date for the date range.
  * @returns {number} The count of LoggedGame entries matching the criteria.
  */
-async function getBeatenGameCountBetweenDates(userId, start, end) {
-    return getGameCountBetweenDates(userId, GAME_STATUS.BEAT, start, end);
+async function getBeatenGameCountBetweenDates(user, start, end) {
+    return getGameCountBetweenDates(user, GAME_STATUS.BEAT, start, end);
 }
 
 module.exports = {
