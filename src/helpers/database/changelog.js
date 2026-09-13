@@ -9,26 +9,11 @@ async function createChangelogEntry(user, game, oldStatus, newStatus) {
 }
 
 async function createLoggedGameEntry(user, game, status, date) {
-    let bg;
+    const loggedGame = await LoggedGames.create({ userId: user.id, gameId: game.id, status: status, statusLastChanged: date });
 
-    await LoggedGames.create({ userId: user.id, gameId: game.id, status: status, statusLastChanged: date })
-    .then((data) => {
-        bg = data;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+    await Changelog.create({ userId: user.id, gameId: game.id, newStatus: status });
 
-    if (bg) {
-        await Changelog.create({ userId: user.id, gameId: game.id, newStatus: status })
-        .catch((err) => {
-            console.log(err);
-        });
-
-        return true;
-    }
-
-    return false;
+    return loggedGame;
 }
 
 async function getChangelog(id, startDate, endDate) {

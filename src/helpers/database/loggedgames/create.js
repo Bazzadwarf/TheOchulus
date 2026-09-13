@@ -17,26 +17,23 @@ const { GAME_STATUS } = require('../../gameStatus.js');
 */
 async function createGameEntry(user, game, status, date) {
     const entry = await checkLoggedGameEntry(user, game);
+    const changedAt = date ? date : new Date();
+    if (!entry) {
+        return await createLoggedGameEntry(user, game, status, date);
+    }
     
-    if (!entry) return await createLoggedGameEntry(user, game, status, date);
-    
-    if (entry.status == status) return false;
+    if (entry.status == status) {
+        return false;
+    }    
     
     await createChangelogEntry(user, game, entry.status, status);
     
-    entry.status = status;
+    entry.set({
+        status: status,
+        statusLastChanged: changedAt
+    });
     
-    if (!date) {
-        entry.statusLastChanged = new Date();
-    }
-    else {
-        entry.statusLastChanged = date;
-    }
-    
-    await entry.save();
-    
-    return entry;
-    
+    return await entry.save();
 }
 
 /**
