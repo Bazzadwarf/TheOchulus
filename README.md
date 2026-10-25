@@ -23,7 +23,9 @@ The Ochulus is a simple personal discord bot used for tracking games completed d
 1. Create `.env` using `.env.template`
     1. Populate `discordClientId`, `discordGuildId` and `discordToken` with your Discord Developer Application details.
     2. Populate `igdbClientId` and `igdbClientSecret` with your IGDB Developer Application details.
+    3. Populate `googleplacesapikey` with your Google Places API key
+    4. Populate `spotifyClientId` and `spotifyClientSecret` with your Spotify App details
 2. Run `npm install` to install Node Packages
-3. Run `node .\dbInit.js` to create database.
-4. Run `node .\deploy-commands.js` to deploy commands to your guild
-5. Run `node .\index.js` to run the bot.
+3. Run `npm initialize-database` to create database.
+4. Run `npm deploy-commands` to deploy commands to your guild
+5. Run `npm start` to run the bot.
